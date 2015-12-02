@@ -17,9 +17,10 @@
 
 /*
   This challenge can be seen as a simple application of the Needleman-Wunsch
-  algorithm in which a restriction is added:
+  algorithm in which restrictions are added:
 
-    - Diagonals are not taken into account
+    - Diagonals are not taken into account, which enables the calculation with
+      a single row of data
 
     - The "score" to take into account is not that of the match of the 2
       sequences but rather the value of the cell
@@ -74,22 +75,19 @@ main(int argc, char *argv[]) {
         // Do something with the line
         auto msize = std::stoi(line) + 1;  // input size + 1 col/row extension
 
-        // Initialize rs
+        // Initialize row
         auto r0 = std::vector<size_t>(msize, inf);
-        auto r1 = std::vector<size_t>(msize, 0);
 
-        // Loop m cols
-        for(auto m=1; m < msize; m++, std::swap(r0, r1)) {
+        // Loop m rows
+        for(auto m=1; m < msize; m++) {
             std::getline(stream, line);
-            ss.str(line);
-            ss.clear();
+            ss.str(line); ss.clear();  // Must be cleared because it was eol (eof)
             // Loop n cols
-            // Don't need to use matrix size - ss >> nextval reads until eol
             for(size_t n=1, val=0, cache=(m - 1) ? inf : 0; ss >> val; n++) {
-                r1[n] = cache = std::min(r0[n], cache) + val;
+                r0[n] = cache = std::min(cache, r0[n]) + val;
             }
         }
-        // Last swap has left the r1 results in r0
+        // Minimum Path Sum is in the last row/col
         std::cout << r0[msize - 1] << std::endl;
     }
     return 0;
