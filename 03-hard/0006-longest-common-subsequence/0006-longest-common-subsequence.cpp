@@ -22,7 +22,10 @@
 
 // Headers for the implementation
 #include <algorithm>
+#include <future>
 #include <iterator>
+#include <limits>
+#include <memory>
 #include <type_traits>
 #include <vector>
 
@@ -36,63 +39,92 @@ Hirschberg algorithm:
 // GCC 4.9.2: compile with -std=c++14 (c++1y is deprecated but works)
 // Uncomment trailing return types below if C++14 is unavailable
 
+const size_t maxsize_t = std::numeric_limits<size_t>::max();
+
+
 template<typename iter>
 auto
-algo_b(iter a1, iter a2, iter b1, iter b2) // -> std::vector<size_t>
+algo_b(iter a1, iter a2, iter b1, iter b2, size_t kmax=maxsize_t)
+    // -> std::vector<size_t>
 {
-    std::vector<size_t> k0(std::distance(b1, b2) + 1, 0);
-    auto k1(k0);
+    std::vector<size_t> k1(std::distance(b1, b2) + 1, 0);
 
     for(auto a=a1; a != a2; ++a) {
         auto aelem = *a;
-        std::swap(k0, k1);
 
+        size_t k0j1 = 0;
+        size_t k1j1 = 0;
         auto j = 1;
-        for(auto b=b1; b != b2; b++, j++)
-            k1[j] = (aelem == *b) ? k0[j - 1] + 1 : std::max(k1[j - 1], k0[j]);
+        for(auto b=b1; b != b2; b++, j++) {
+            auto k0j = k1[j];
+            k1[j] = k1j1 = (aelem == *b) ? k0j1 + 1 : std::max(k1j1, k0j);
+            if(k1j1 >= kmax)
+                return k1;
+            k0j1 = k0j;
+        }
     }
     return k1;
 }
 
-
 template<typename iter, typename iterout>
 auto
-algo_c(iter a1, iter a2, iter b1, iter b2, iterout v)  // -> void
+algo_c2(iter a1, iter a2, iter b1, iter b2, iterout v, size_t lmax, bool parallel=false)
+    // -> void
 {
     auto m = std::distance(a1, a2);
     auto n = std::distance(b1, b2);
 
-    if(n == 0)
-        return;  // Trivial case. b is empty -> cannot be a subsequence of a
-
-    if(m == 1) {
-        // Trivial case. Longest subsequence can be 1 and must be a1 if any
-        if(std::find(b1, b2, *a1) != b2)
-            *(v++) = *a1;  // increment v must not be forgotten
-        return;
-    }
+    if(not m or not n)
+        return;  // one (or both) of the sequences are empty
 
     // Optimize out common prefixes
-    if(n <= m) {
-        auto abmis = std::mismatch(a1, std::prev(a2, m - n), b1);
+    auto abmis = std::mismatch(a1, std::next(a1, std::min(m, n)), b1);
+    if(a1 != abmis.first) {
         std::copy(a1, abmis.first, v);
         a1 = abmis.first;
         b1 = abmis.second;
-    } else {
-        auto abmis = std::mismatch(b1, std::prev(b2, n - m), a1);
-        std::copy(b1, abmis.first, v);
-        b1 = abmis.first;
-        a1 = abmis.second;
     }
 
-    if( a1 == a2 || b1 == b2)
-        return;  // one (or both) fully copied, nothing left
+    if(b1 == b2 or a1 == a2)
+        return;  // After optimization one (or both) of the sequences are empty
 
-    // Partition a - Recalc distance ... a1 may have been changed
-    auto ai = std::next(a1, std::distance(a1, a2) / 2);
+    // Common Suffix optimization
+    auto suffix_len = 0;
+    auto a2rs = std::reverse_iterator<decltype(a2)>(a2);
+    auto b2rs = std::reverse_iterator<decltype(b2)>(b2);
+
+    m = std::distance(a1, a2);  // a1 may have changed above
+    n = std::distance(b1, b2);
+    auto abrmis = std::mismatch(a2rs, std::next(a2rs, std::min(m, n)), b2rs);
+    if(a2rs != abrmis.first) {
+        suffix_len = std::distance(a2rs, abrmis.first);
+        a2 = std::prev(a2, suffix_len);
+        b2 = std::prev(b2, suffix_len);
+    }
+
+    if(b1 == b2 or a1 == a2) {
+        if(suffix_len)  // suffix was optimized away
+            std::copy(a2, std::next(a2, suffix_len), v);
+        return;  // After optimization one (or both) of the sequences are empty
+    }
+
+    m = std::distance(a1, a2);  // a1 may have changed above
+    if(m == 1) {
+        // Trivial case. Longest subsequence can be 1 and must be a1 if any
+        if(std::find(b1, b2, *a1) != b2)
+            *(v++) = *a1;  // ++ is no-op in back_insert, but iterout may be anything
+
+        if(suffix_len)  // suffix was optimized away
+            std::copy(a2, std::next(a2, suffix_len), v);
+
+        return;
+    }
+
+    // Partition a
+    auto ai = std::next(a1, m / 2);
 
     // Retrieve LCS lengths for forward part of a
-    auto l1 = algo_b(a1, ai, b1, b2);  // will be used as output of l1 + l2
+    auto l1 = algo_b(a1, ai, b1, b2, lmax);  // will be used as output of l1 + l2
 
     // Prepare reversal of 2nd part of a and complete b
     auto air = std::reverse_iterator<decltype(ai)>(ai);
@@ -102,11 +134,11 @@ algo_c(iter a1, iter a2, iter b1, iter b2, iterout v)  // -> void
     auto b2r = std::reverse_iterator<decltype(b2)>(b2);
 
     // Retrieve LCS lengths for back part of a
-    const auto &l2 = algo_b(a2r, air, b2r, b1r);
+    const auto &l2 = algo_b(a2r, air, b2r, b1r, lmax);
 
     // find best patition point k for b
-    auto l1rbegin = l1.rbegin();
     // sum l1 + l2_rev onto l1 (actually l1_r + l2 to get k in 1 step)
+    auto l1rbegin = l1.rbegin();
     std::transform(l1rbegin, l1.rend(), l2.begin(), l1rbegin, std::plus<size_t>());
 
     // lowest pos with max sum - max yields right iter ... reversed sum above
@@ -115,9 +147,46 @@ algo_c(iter a1, iter a2, iter b1, iter b2, iterout v)  // -> void
     // Partition b
     auto bk = std::next(b1, k);
 
+    // Limit the maximum sum to the already known max
+    lmax = l1[k];
+
+
     // Solve the smaller problems
-    algo_c(a1, ai, b1, bk, v);  // Partitions: a1 -> ai & b1 -> bk
-    algo_c(ai, a2, bk, b2, v);  // Partitions: ai -> a2 & bk -> b2
+#ifdef _GLIBCXX_HAS_GTHREADS
+    if(parallel) {
+#if 0
+        std::vector<typename std::decay<decltype(*a1)>::type> vasync1;
+        auto v1 = std::back_inserter(vasync1);
+        auto fut1 = std::async(std::launch::async, algo_c2<iter, iterout>,
+                               a1, ai, b1, bk, v1, lmax, parallel);
+#else
+        // Partitions: a1 -> ai & b1 -> bk
+        algo_c2(a1, ai, b1, bk, v, lmax, parallel);
+#endif
+        std::vector<typename std::decay<decltype(*a1)>::type> vasync2;
+        auto v2 = std::back_inserter(vasync2);
+        // Partitions: a1 -> a1 & b1 -> bk
+        auto fut2 = std::async(std::launch::async, algo_c2<iter, iterout>,
+                              ai, a2, bk, b2, v2, lmax, parallel);
+#if 0
+        fut1.get();
+        std::copy(vasync1.begin(), vasync1.end(), v);
+#endif
+        fut2.get();
+        std::copy(vasync2.begin(), vasync2.end(), v);
+    } else
+#else
+    {
+        // Partitions: a1 -> ai & b1 -> bk
+        algo_c2(a1, ai, b1, bk, v, lmax, parallel);
+        // Partitions: a1 -> a1 & b1 -> bk
+        algo_c2(ai, a2, bk, b2, v, lmax, parallel);
+    }
+#endif
+
+    // A suffix may have been saved ... add it
+    if(suffix_len)
+        std::copy(a2, std::next(a2, suffix_len), v);
 
     return;
 }
@@ -126,31 +195,31 @@ algo_c(iter a1, iter a2, iter b1, iter b2, iterout v)  // -> void
 // Overload to avoid having to pass a vector
 template<typename iter>
 auto
-algo_c(iter a1, iter a2, iter b1, iter b2)
+algo_c(iter a1, iter a2, iter b1, iter b2, bool parallel=true)
 //    -> std::vector<typename std::decay<decltype(*a1)>::type>
 {
     using itertype = typename std::decay<decltype(*a1)>::type;
 
     std::vector<itertype> v;
-    algo_c(a1, a2, b1, b2, std::back_inserter(v));
+    algo_c2(a1, a2, b1, b2, std::back_inserter(v), maxsize_t, parallel);
     return v;
 }
 
 
 template <typename T>
 auto
-compute_lcs_vec(const T &a, const T &b)
+compute_lcs_vec(const T &a, const T &b, bool parallel=false)
 //    -> std::vector<typename std::decay<decltype(*a.begin())>::type>
 {
-    return algo_c(a.begin(), a.end(), b.begin(), b.end());
+    return algo_c(a.begin(), a.end(), b.begin(), b.end(), parallel);
 }
 
 
 template <typename T>
 auto
-compute_lcs(const T &a, const T &b) // -> T
+compute_lcs(const T &a, const T &b, bool parallel=false) // -> T
 {
-    auto v = compute_lcs_vec(a, b);
+    auto v = compute_lcs_vec(a, b, parallel);
     return T(v.begin(), v.end());
 }
 
@@ -160,20 +229,14 @@ int main(int argc, char *argv[]) {
     std::string line;
 
     while(std::getline(stream, line)) {
-#if 1
         auto lbegin = line.begin();
         auto lend = line.end();
         auto sep = std::find(lbegin, lend, ';');
 
-        const auto &v = algo_c(lbegin, sep, std::next(sep), lend);
+        const auto &v = algo_c(lbegin, sep, std::next(sep), lend, false);
         for(auto c: v)
             std::cout << c;
         std::cout << std::endl;
-#else
-        auto sep = line.find(';');
-        auto lcs = compute_lcs(line.substr(0, sep), line.substr(sep++));
-        std::cout << lcs << std::endl;
-#endif
     }
     return 0;
 }
