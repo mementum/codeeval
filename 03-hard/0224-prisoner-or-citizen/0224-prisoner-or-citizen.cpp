@@ -37,6 +37,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <sstream>
 
 // Headers for the implementation
 #include <algorithm>
@@ -80,14 +81,14 @@ is_in_poly(const Seq &vs, const Point_t &p)
         auto v0 = *vs0;
         auto v1 = *vs1;
 
-        auto OnLineX = [&v0, &v1, &p] () -> bool {
+        auto OnLineX = [&] () -> bool {
             // p is within the x coordinates of v0/v1
             if(v0.x <= v1.x)
-                return v0.x <= p.x && p.x <= v1.x;
-            return v0.x >= p.x && p.x >= v1.x;
+                return v0.x <= p.x and p.x <= v1.x;
+            return v0.x >= p.x and p.x >= v1.x;
         };
 
-        auto LeftOrRight = [&v0, &v1, &p] () -> ssize_t {
+        auto LeftOrRight = [&] () -> ssize_t {
             // Must set return type or else "unsigned" will be auto chosen
             // Left/Right -  < 0 Right, 0 = On Line, > 0 Left
             return ((v1.x - v0.x) * (p.y - v0.y)) - ((v1.y - v0.y) * (p.x - v0.x));
@@ -112,28 +113,18 @@ is_in_poly(const Seq &vs, const Point_t &p)
 }
 
 
-template<typename T, typename C>
-auto
-tokenize(const T &str, const C &delim, bool empty=true)
-//    -> std::vector<T>
+struct SeparatorReader: std::ctype<char>
 {
-    T buf;
-    std::vector<T> v;
+    SeparatorReader(const std::string &seps):
+        std::ctype<char>(get_table(seps), true) {}
 
-    for(auto c: str) {
-        if(c != delim)
-            buf.push_back(c);
-        else
-            if(c == delim && (empty || !buf.empty())) {
-                v.push_back(buf);
-                buf.clear();
-            }
+    std::ctype_base::mask const *get_table(const std::string &seps) {
+        auto rc = new std::ctype_base::mask[std::ctype<char>::table_size]();
+        for(auto &sep: seps)
+            rc[sep] = std::ctype_base::space;
+        return &rc[0];
     }
-    if(!buf.empty())
-        v.push_back(buf);
-
-    return v;
-}
+};
 
 
 int
@@ -141,24 +132,22 @@ main(int argc, char *argv[]) {
     std::ifstream stream(argv[1]);
     std::string line;
 
-    while(std::getline(stream, line)) {
-        auto coords = tokenize(line, '|');
-        auto vcoords = tokenize(coords[0], ',');
+    std::stringstream sscoord;
+    sscoord.imbue(std::locale(sscoord.getloc(), new SeparatorReader(" ,|\n")));
 
-        std::forward_list<Point_t> vertex;
-        auto iter = vertex.before_begin();
-        for(auto vcoord: vcoords) {
-            auto xy = tokenize(vcoord, ' ', false);
-            iter = vertex.insert_after(iter, Point_t(std::stoi(xy[0]), std::stoi(xy[1])));
-        }
+    while (std::getline(stream, line)) {
+        sscoord.str(line); sscoord.clear();  // set str & clear any eol/eof
 
-        // Close the polygon by adding the 1st vertex to the back
-        vertex.insert_after(iter, vertex.front());
+        // Parse all coordinates (vertex and point)
+        std::vector<Point_t> coords;
+        for (int x=0, y=0; sscoord >> x and sscoord >> y;)
+            coords.push_back(Point_t(x, y));
 
-        auto xy = tokenize(coords[1], ' ', false);
-        Point_t poc(std::stoi(xy[0]), std::stoi(xy[1]));
+        // extract point and replace with initial vertex to close polygon
+        auto pt = coords.back();
+        coords[coords.size() - 1] = coords.front();
 
-        std::cout << (is_in_poly(vertex, poc) ? "Prisoner" : "Citizen") << std::endl;
+        std::cout << (is_in_poly(coords, pt) ? "Prisoner" : "Citizen") << std::endl;
     }
     return 0;
 }
