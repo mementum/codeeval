@@ -76,39 +76,51 @@ is_in_poly(const Seq &vs, const Point_t &p)
 
     ssize_t wn = 0;    // the  winding number counter
 
-    // loop through all edges of the polygon
-    for (auto vs0=vs.begin(), vs1=std::next(vs0); vs1 != vs.end(); vs0++, vs1++) {
-        auto v0 = *vs0;
-        auto v1 = *vs1;
+    auto vsbegin = vs.begin();
+    auto vsend = vs.end();
 
-        auto OnLineX = [&] () -> bool {
-            // p is within the x coordinates of v0/v1
-            if(v0.x <= v1.x)
-                return v0.x <= p.x and p.x <= v1.x;
-            return v0.x >= p.x and p.x >= v1.x;
-        };
+    // get vector inside seqtype to make binary predicate generic
+    using seqtype = typename std::decay<decltype(*vsbegin)>::type;
 
-        auto LeftOrRight = [&] () -> ssize_t {
-            // Must set return type or else "unsigned" will be auto chosen
-            // Left/Right -  < 0 Right, 0 = On Line, > 0 Left
-            return ((v1.x - v0.x) * (p.y - v0.y)) - ((v1.y - v0.y) * (p.x - v0.x));
-        };
+    // loop through all edges of the polygon -- mismatch does the loop for us
+    auto endit = std::mismatch(
+        vsbegin, std::prev(vsend), std::next(vsbegin),
+        [&] (const seqtype &v0, const seqtype &v1) -> bool {
 
-        if(v1.y >= p.y && p.y > v0.y) {   // upwards crossing
-            auto lor = LeftOrRight();
-            if(lor > 0)
-                wn++;
-            else if(lor == 0)
-                return true;
-        } else if(v0.y >= p.y && p.y > v1.y) {   // downwards crossing
-            auto lor = LeftOrRight();
-            if(lor < 0)  // Right of line
-                wn--;
-            else if(lor == 0)
-                return true;
-        } else if(v0.y == p.y && OnLineX())
-            return true;
-    }
+            auto OnLineX = [&] () -> bool {
+                // p is within the x coordinates of v0/v1
+                if(v0.x <= v1.x)
+                    return v0.x <= p.x and p.x <= v1.x;
+                return v0.x >= p.x and p.x >= v1.x;
+            };
+
+            auto LeftOrRight = [&] () -> ssize_t {
+                // Must set return type or else "unsigned" will be auto chosen
+                // Left/Right -  < 0 Right, 0 = On Line, > 0 Left
+                return ((v1.x - v0.x) * (p.y - v0.y)) - ((v1.y - v0.y) * (p.x - v0.x));
+            };
+
+            if(v1.y >= p.y && p.y > v0.y) {   // upwards crossing
+                auto lor = LeftOrRight();
+                if(lor > 0)
+                    wn++;
+                else if(lor == 0)
+                    return false;
+            } else if(v0.y >= p.y && p.y > v1.y) {   // downwards crossing
+                auto lor = LeftOrRight();
+                if(lor < 0)  // Right of line
+                    wn--;
+                else if(lor == 0)
+                    return false;
+            } else if(v0.y == p.y && OnLineX())
+                return false;
+
+            return true;  // tell mismatch to carry on
+        });
+
+    if (endit.second != vsend)  // broke out early
+        return true;
+
     return wn != 0;
 }
 
