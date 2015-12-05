@@ -38,14 +38,19 @@ const int TOTALCELLS = (std::numeric_limits<clen_t>::max() + 1);
 const int TOTALCELLS = 8192;
 #endif
 
+// std::unique_ptr<cell_t[]> gcells(new cell_t[TOTALCELLS]());
+// cell_t gcells[TOTALCELLS];
+static std::vector<cell_t> cells(TOTALCELLS);
+
 
 void
 bfck(const std::string &bfcode, const size_t &totalcells=TOTALCELLS)
 {
     const int lastcell = totalcells - 1;
     // Init cells array  - TOTALCELLS may not fit on the stack
-    std::unique_ptr<cell_t[]> cells(new cell_t[totalcells]());
-    std::fill_n(&cells[0], 0, totalcells);
+    // auto cells = &gcells[0];
+    // std::fill_n(&cells[0], 0, totalcells);
+    std::fill(cells.begin(), cells.end(), 0);
 
     // Loop state and addresses
     std::vector<clen_t> loops;
