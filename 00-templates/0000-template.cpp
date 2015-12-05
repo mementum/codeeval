@@ -39,7 +39,7 @@
 // Some C library header
 #include <cmath>
 #include <cstdint>
-x
+
 ///////////////////////////////////////////////////////////////////////////////
 // Output debugging
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,17 +61,17 @@ void debugout(T t, Args... args) // recursive variadic function
 ///////////////////////////////////////////////////////////////////////////////
 // Stream Imbuer for Parsing
 // http://stackoverflow.com/questions/1894886/parsing-a-comma-delimited-stdstring
-//    ss.imbue(std::locale(std::locale(), new csv_reader()));
+//    ss.imbue(std::locale(ss.getloc(), new SeparatorReader(" ,|")));
 ///////////////////////////////////////////////////////////////////////////////
-struct csv_reader: std::ctype<char> {
-    csv_reader(): std::ctype<char>(get_table()) {}
-    static std::ctype_base::mask const* get_table() {
-        static std::vector<std::ctype_base::mask>
-            rc(table_size, std::ctype_base::mask());
+struct SeparatorReader: std::ctype<char>
+{
+    SeparatorReader(const std::string &seps):
+        std::ctype<char>(get_table(seps), true) {}
 
-        rc[','] = std::ctype_base::space;
-        rc['\n'] = std::ctype_base::space;
-        rc[' '] = std::ctype_base::space;
+    std::ctype_base::mask const *get_table(const std::string &seps) {
+        auto rc = new std::ctype_base::mask[std::ctype<char>::table_size]();
+        for(auto &sep: seps)
+            rc[sep] = std::ctype_base::space;
         return &rc[0];
     }
 };
