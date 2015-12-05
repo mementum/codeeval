@@ -103,35 +103,22 @@ nw_align_affine_gap(iter a1, iter a2, iter b1, iter b2)
 }
 
 
-struct SeparatorReader: std::ctype<char>
-{
-    SeparatorReader(const std::string &seps):
-        std::ctype<char>(get_table(seps), true) {}
-
-    std::ctype_base::mask const *get_table(const std::string &seps) {
-        auto rc = new std::ctype_base::mask[std::ctype<char>::table_size]();
-        for(auto &sep: seps)
-            rc[sep] = std::ctype_base::space;
-        return &rc[0];
-    }
-};
-
-
 int
 main(int argc, char *argv[]) {
     std::ifstream stream(argv[1]);
-    std::string line, seqa, seqb;
-
-    std::stringstream ss;
-    ss.imbue(std::locale(ss.getloc(), new SeparatorReader(" |\n")));
+    std::string line;
 
     while (std::getline(stream, line)) {
         // Do something with the line
-        ss.str(line); ss.clear();
-        ss >> seqa; ss >> seqb;
+        auto seqa_end = line.find_first_of(" |");
+        auto seqb_start = line.find_first_not_of(" |", seqa_end);
+
+        auto lbegin = line.begin();
 
         auto maxscore = nw_align_affine_gap(
-            seqa.begin(), seqa.end(), seqb.begin(), seqb.end());
+            lbegin, std::next(lbegin, seqa_end),          // Seqa
+            std::next(lbegin, seqb_start), line.end());   // Seqb
+
         std::cout << maxscore << std::endl;
     }
     return 0;
