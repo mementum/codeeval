@@ -25,53 +25,48 @@
 #include <algorithm>  // fill_n
 #include <memory>  // unique_ptr
 #include <limits>  //numeric_limits
-#include <cstdint>  // uint16_t
+
 
 // Cell Type and Cells (Array Length) types
 typedef unsigned char cell_t;
-typedef uint16_t clen_t;
-
-#if 0
-const int TOTALCELLS = (std::numeric_limits<clen_t>::max() + 1);
-#else
-// Following experiments, 8192 seems to be the maximum expected size
-const int TOTALCELLS = 8192;
-#endif
-
-// std::unique_ptr<cell_t[]> gcells(new cell_t[TOTALCELLS]());
-// cell_t gcells[TOTALCELLS];
-static std::vector<cell_t> cells(TOTALCELLS);
+typedef size_t clen_t;
 
 
-void
-bfck(const std::string &bfcode, const size_t &totalcells=TOTALCELLS)
-{
-    const int lastcell = totalcells - 1;
-    // Init cells array  - TOTALCELLS may not fit on the stack
-    // auto cells = &gcells[0];
-    // std::fill_n(&cells[0], 0, totalcells);
-    std::fill(cells.begin(), cells.end(), 0);
+struct bfck {
+    std::unique_ptr<cell_t[]> cells;
+    size_t totalcells;
+    size_t lastcell;
 
-    // Loop state and addresses
-    std::vector<clen_t> loops;
+    bfck(size_t maxcells=0) {
+        totalcells = maxcells ? maxcells : std::numeric_limits<clen_t>::max() + 1;
+        lastcell = totalcells - 1;
 
-    clen_t cellptr = 0;
-    auto loopskip = 0;
-    const clen_t eocode = bfcode.length();
+        cells = std::unique_ptr<cell_t[]>(new cell_t[totalcells]);
+    }
 
-    for(clen_t codeptr=0; codeptr < eocode; ++codeptr)
-    {
-        auto codechar = bfcode[codeptr];
+    auto
+    run(const std::string &bfcode) {
+        std::fill_n(&cells[0], totalcells, 0);
 
-        if(loopskip) {
-            // skip as long as loops are being skipped / consider nested []
-            if(codechar == '[')
-                ++loopskip;
-            else if(codechar == ']')
-                --loopskip;
-            continue;
-        }
-        switch(codechar) {
+        // Loop state and addresses
+        std::vector<clen_t> loops;
+
+        clen_t cellptr = 0;
+        auto loopskip = 0;
+        const clen_t eocode = bfcode.length();
+
+        for(clen_t codeptr=0; codeptr < eocode; ++codeptr) {
+            auto codechar = bfcode[codeptr];
+
+            if(loopskip) {
+                // skip as long as loops are being skipped / consider nested []
+                if(codechar == '[')
+                    ++loopskip;
+                else if(codechar == ']')
+                    --loopskip;
+                continue;
+            }
+            switch(codechar) {
             case '+':
                 cells[cellptr]++;  // overflow 255 -> 0 automatic
                 break;
@@ -105,18 +100,20 @@ bfck(const std::string &bfcode, const size_t &totalcells=TOTALCELLS)
             case '.':
                 std::cout << cells[cellptr];
                 break;
+            }
         }
     }
-    std::cout << std::endl;  // output final end of line
-}
+};
 
 
 int main(int argc, char *argv[]) {
     std::ifstream stream(argv[1]);
     std::string line;
 
+    auto b = bfck(8192);
     while(std::getline(stream, line)) {
-        bfck(line);
+        b.run(line);
+        std::cout << std::endl;  // output final end of line
     }
     return 0;
 }
