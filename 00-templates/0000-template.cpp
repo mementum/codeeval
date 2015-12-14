@@ -40,13 +40,36 @@
 #include <cmath>
 #include <cstdint>
 
+// STL Allocator
+template <class T>
+struct Mallocator
+{
+    typedef T value_type;
+    Mallocator() noexcept {} //default ctor not required by STL
+
+    // A converting copy constructor:
+    template<class U> Mallocator(const Mallocator<U>&) noexcept {}
+    template<class U> bool operator ==(const Mallocator<U> &) const noexcept { return true; }
+    template<class U> bool operator !=(const Mallocator<U> &) const noexcept { return false; }
+
+    T* allocate(const size_t n) const {
+        void* const pv = ::malloc(n * sizeof(T));
+        return static_cast<T*>(pv);
+    }
+
+    void deallocate(T* const p, size_t n) const noexcept {
+        ::free(p);
+    }
+};
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // Output debugging
 ///////////////////////////////////////////////////////////////////////////////
 template<typename T>
 void debugout(T t)
 {
-    std::cout << t;
+    std::cout << t << std::endl;
 }
 
 template<typename T, typename... Args>
@@ -54,7 +77,6 @@ void debugout(T t, Args... args) // recursive variadic function
 {
     std::cout << t;
     debugout(args...) ;
-    std::cout << std::endl;
 }
 
 
