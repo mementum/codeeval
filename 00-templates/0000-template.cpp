@@ -93,7 +93,7 @@ struct SeparatorReader: std::ctype<char>
     std::ctype_base::mask const *get_table(const std::string &seps) {
         auto rc = new std::ctype_base::mask[std::ctype<char>::table_size]();
         for(auto &sep: seps)
-            rc[sep] = std::ctype_base::space;
+            rc[static_cast<unsigned char>(sep)] = std::ctype_base::space;
         return &rc[0];
     }
 };
