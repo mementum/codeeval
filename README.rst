@@ -86,7 +86,7 @@ Challenges
 .. _Remove Characters: https://www.codeeval.com/public_sc/13/
 .. _Trailing String: https://www.codeeval.com/public_sc/32/
 .. _Jolly Jumpers: https://www.codeeval.com/public_sc/43/
-.. _Reverse and Add: https://www.codeeval.com/public_sc/223/
+.. _Reverse and Add: https://www.codeeval.com/public_sc/45/
 .. _Alternative Reality: https://www.codeeval.com/public_sc/223/
 
 .. hard
