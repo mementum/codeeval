@@ -75,9 +75,9 @@ Challenges
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 3 | 56.899 |
 +------+----------+----------------------------------------------+----------+--------+
-| 0223 | Medium   | `Alternative Reality`__                      | C++      | 64.974 |
+| 0223 | Medium   | `Alternative Reality`_                       | C++      | 64.974 |
 |      |          |                                              +----------+--------+
-|      |          | __https://www.codeeval.com/public_sc/223/    | Python 2 |        |
+|      |          |                                              | Python 2 |        |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 3 |        |
 +------+----------+----------------------------------------------+----------+--------+
@@ -86,6 +86,7 @@ Challenges
 .. _0013: https://www.codeeval.com/public_sc/13/
 .. _0032: https://www.codeeval.com/public_sc/32/
 .. _0043: https://www.codeeval.com/public_sc/43/
+.. _Alternative Reality: https://www.codeeval.com/public_sc/223/
 
 .. hard
 .. _0006: https://www.codeeval.com/public_sc/6/
