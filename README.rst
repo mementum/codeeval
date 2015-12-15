@@ -15,63 +15,63 @@ Challenges
 +------+----------+----------------------------------------------+----------+--------+
 | Code | Category | Name                                         | Language | Score  |
 +======+==========+==============================================+==========+========+
-| 0006 | Hard     | `Longest Common Subsequence <0006_>`_        | C++      | 99.910 |
+| 0006 | Hard     | `Longest Common Subsequence`_                | C++      | 99.910 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 2 | 92.918 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 3 | 86.478 |
 +------+----------+----------------------------------------------+----------+--------+
-| 0072 | Hard     | `Minimum Path Sum <0072_>`_                  | C++      | 99.939 |
+| 0072 | Hard     | `Minimum Path Sum`_                          | C++      | 99.939 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 2 | 93.491 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 3 | 87.646 |
 +------+----------+----------------------------------------------+----------+--------+
-| 0171 | Hard     | `DNA Alignment <0171_>`_                     | C++      | 99.903 |
+| 0171 | Hard     | `DNA Alignment`_                             | C++      | 99.903 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 2 | 81.440 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 3 | 78.598 |
 +------+----------+----------------------------------------------+----------+--------+
-| 0185 | Hard     | `Glue Shredded Pieces <0185_>`_              | C++      | 98.578 |
+| 0185 | Hard     | `Glue Shredded Pieces`_                      | C++      | 98.578 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 2 | 77.583 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 3 | 72.351 |
 +------+----------+----------------------------------------------+----------+--------+
-| 0210 | Hard     | `Brainf*ck <0210_>`_                         | C++      | 99.897 |
+| 0210 | Hard     | `Brainf*ck`_                                 | C++      | 99.897 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 2 | 85.319 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 3 | 83.599 |
 +------+----------+----------------------------------------------+----------+--------+
-| 0224 | Hard     | `Prisoner Or Citizen <0224_>`_               | C++      | 99.942 |
+| 0224 | Hard     | `Prisoner Or Citizen`_                       | C++      | 99.942 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 2 |        |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 3 |        |
 +------+----------+----------------------------------------------+----------+--------+
-| 0013 | Medium   | `Remove Characters <0013_>`_                 | C++      | 64.970 |
+| 0013 | Medium   | `Remove Characters`_                         | C++      | 64.970 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 2 | 58.528 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 3 |        |
 +------+----------+----------------------------------------------+----------+--------+
-| 0032 | Medium   | `Trailing String <0032_>`_                   | C++      | 64.969 |
+| 0032 | Medium   | `Trailing String`_                           | C++      | 64.969 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 2 | 58.552 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 3 |        |
 +------+----------+----------------------------------------------+----------+--------+
-| 0043 | Medium   | `Jolly Jumpers <0043_>`_                     | C++      | 64.969 |
+| 0043 | Medium   | `Jolly Jumpers`_                             | C++      | 64.969 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 2 | 58.399 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 3 | 52.279 |
 +------+----------+----------------------------------------------+----------+--------+
-| 0045 | Medium   | `Reverse and Add`__                          | C++      | 64.975 |
+| 0045 | Medium   | `Reverse and Add`_                           | C++      | 64.975 |
 |      |          |                                              +----------+--------+
-|      |          | __https://www.codeeval.com/public_sc/45/     | Python 2 | 58.496 |
+|      |          |                                              | Python 2 | 58.496 |
 |      |          |                                              +----------+--------+
 |      |          |                                              | Python 3 | 56.899 |
 +------+----------+----------------------------------------------+----------+--------+
@@ -83,15 +83,16 @@ Challenges
 +------+----------+----------------------------------------------+----------+--------+
 
 .. medium
-.. _0013: https://www.codeeval.com/public_sc/13/
-.. _0032: https://www.codeeval.com/public_sc/32/
-.. _0043: https://www.codeeval.com/public_sc/43/
+.. _Remove Characters: https://www.codeeval.com/public_sc/13/
+.. _Trailing String: https://www.codeeval.com/public_sc/32/
+.. _Jolly Jumpers: https://www.codeeval.com/public_sc/43/
+.. _Reverse and Add: https://www.codeeval.com/public_sc/223/
 .. _Alternative Reality: https://www.codeeval.com/public_sc/223/
 
 .. hard
-.. _0006: https://www.codeeval.com/public_sc/6/
-.. _0072: https://www.codeeval.com/public_sc/72/
-.. _0171: https://www.codeeval.com/public_sc/171/
-.. _0185: https://www.codeeval.com/public_sc/185/
-.. _0210: https://www.codeeval.com/public_sc/210/
-.. _0224: https://www.codeeval.com/public_sc/224/
+.. _Longest Common Subsequence: https://www.codeeval.com/public_sc/6/
+.. _Minimum Path Sum: https://www.codeeval.com/public_sc/72/
+.. _DNA Alignment: https://www.codeeval.com/public_sc/171/
+.. _Glue Shredded Pieces: https://www.codeeval.com/public_sc/185/
+.. _Brainf*ck: https://www.codeeval.com/public_sc/210/
+.. _Prisoner or Citizen: https://www.codeeval.com/public_sc/224/
