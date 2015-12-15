@@ -26,8 +26,11 @@ import sys
 
 # Small Py2/3 compatibility layer
 if sys.version_info.major == 2:
+    def translate(string, remchars): return string.translate(None, remchars)
     pass
 else:  # >= Py3
+    def translate(string, remchars):
+        return string.translate(str.maketrans("", "", remchars))
     pass
 
 
@@ -42,7 +45,7 @@ if __name__ == '__main__':
 
         src, removechars = tst.split(',')
         removechars = removechars.lstrip()
-        dst = src.translate(None, removechars)
+        dst = translate(src, removechars)
         print(dst)
 
     test_cases.close()
