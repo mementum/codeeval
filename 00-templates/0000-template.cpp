@@ -67,16 +67,16 @@ struct Mallocator
 // Output debugging
 ///////////////////////////////////////////////////////////////////////////////
 template<typename T>
-void debugout(T t)
+void debugout(const T &t)
 {
     std::cout << t << std::endl;
 }
 
 template<typename T, typename... Args>
-void debugout(T t, Args... args) // recursive variadic function
+void debugout(const T &t, Args... args) // recursive variadic function
 {
     std::cout << t;
-    debugout(args...) ;
+    debugout(args...);
 }
 
 
