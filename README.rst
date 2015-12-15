@@ -12,7 +12,7 @@ same time crafting it to be elegant and reusable.
 Challenges
 ----------
 
-.. _codeeval https://www.codeeval.com/public_sc/
+.. _codeeval: https://www.codeeval.com/public_sc/
 
 +------+----------+----------------------------------+----------+--------+
 | Code | Category | Name                             | Language | Score  |
