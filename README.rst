@@ -12,7 +12,6 @@ same time crafting it to be elegant and reusable.
 Challenges
 ----------
 
-.. _codeeval: https://www.codeeval.com/public_sc/
 
 +------+----------+----------------------------------+----------+--------+
 | Code | Category | Name                             | Language | Score  |
@@ -79,7 +78,9 @@ Challenges
 +------+----------+----------------------------------+----------+--------+
 | 0045 | Medium   | Reverse and Add                  | C++      | 64.975 |
 |      |          |                                  +----------+--------+
-|      |          | codeeval_/45                   | Python 2 | 58.496 |
+|      |          | codeeval_/45                     | Python 2 | 58.496 |
 |      |          |                                  +----------+--------+
 |      |          |                                  | Python 3 | 56.899 |
 +------+----------+----------------------------------+----------+--------+
+
+.. _codeeval: https://www.codeeval.com/public_sc/
