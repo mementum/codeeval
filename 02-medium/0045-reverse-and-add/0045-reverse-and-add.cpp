@@ -48,15 +48,26 @@ reverse_and_add(const size_t &input)
 }
 
 
+struct SeparatorReader: std::ctype<char>
+{
+    SeparatorReader(const std::string &seps):
+        std::ctype<char>(get_table(seps), true) {}
+
+    std::ctype_base::mask const *get_table(const std::string &seps) {
+        auto rc = new std::ctype_base::mask[std::ctype<char>::table_size]();
+        for(auto &sep: seps)
+            rc[static_cast<unsigned char>(sep)] = std::ctype_base::space;
+        return &rc[0];
+    }
+};
+
+
 int main(int argc, char *argv[]) {
     std::ifstream stream(argv[1]);
-    std::string line;
+    stream.imbue(std::locale(stream.getloc(), new SeparatorReader("\n")));
 
-    while(std::getline(stream, line)) {
-        if(line == "")
-            continue;
-
-        auto result = reverse_and_add(std::stoi(line));
+    for(auto i=0; stream >> i;) {
+        auto result = reverse_and_add(i);
         std::cout << result.first << " " << result.second << std::endl;
     }
     return 0;
