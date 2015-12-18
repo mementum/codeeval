@@ -76,6 +76,12 @@ Challenges
 |      |          |                                   +----------+--------+--------+-----------+
 |      |          |                                   | Python 3 | 58.525 |   1051 |   2166784 |
 +------+----------+-----------------------------------+----------+--------+--------+-----------+
+| 0158 | Medium   | `Interrupted Bubble Sort`_        | C++      | 64.962 |      4 |     16017 |
+|      |          |                                   +----------+--------+--------+-----------+
+|      |          |                                   | Python 2 | 58.426 |    115 |   3999382 |
+|      |          |                                   +----------+--------+--------+-----------+
+|      |          |                                   | Python 3 | 57.064 |    275 |   4543691 |
++------+----------+-----------------------------------+----------+--------+--------+-----------+
 | 0223 | Medium   | `Alternative Reality`_            | C++      | 64.974 |      3 |      8848 |
 |      |          |                                   +----------+--------+--------+-----------+
 |      |          |                                   | Python 2 | 58.479 |    121 |   3952758 |
@@ -88,6 +94,7 @@ Challenges
 .. _Trailing String: https://www.codeeval.com/public_sc/32/
 .. _Jolly Jumpers: https://www.codeeval.com/public_sc/43/
 .. _Reverse and Add: https://www.codeeval.com/public_sc/45/
+.. _Interrupted Bubble Sort: https://www.codeeval.com/public_sc/158/
 .. _Alternative Reality: https://www.codeeval.com/public_sc/223/
 
 .. hard
