@@ -247,18 +247,22 @@ void debugout(const T &t, Args... args) // recursive variadic function
 // http://stackoverflow.com/questions/1894886/parsing-a-comma-delimited-stdstring
 //    ss.imbue(std::locale(ss.getloc(), new SeparatorReader(" ,|")));
 ///////////////////////////////////////////////////////////////////////////////
+#include <locale>
+
 struct SeparatorReader: std::ctype<char>
 {
-    SeparatorReader(const std::string &seps):
-        std::ctype<char>(get_table(seps), true) {}
+    template<typename T>
+    SeparatorReader(const T &seps): std::ctype<char>(get_table(seps), true) {}
 
-    std::ctype_base::mask const *get_table(const std::string &seps) {
-        auto rc = new std::ctype_base::mask[std::ctype<char>::table_size]();
-        for(auto &sep: seps)
+    template<typename T>
+    std::ctype_base::mask const *get_table(const T &seps) {
+        auto &&rc = new std::ctype_base::mask[std::ctype<char>::table_size]();
+        for(auto &&sep: seps)
             rc[static_cast<unsigned char>(sep)] = std::ctype_base::space;
         return &rc[0];
     }
 };
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // String utilities
