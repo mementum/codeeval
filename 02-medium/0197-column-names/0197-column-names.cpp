@@ -31,8 +31,8 @@ int
 main(int argc, char *argv[]) {
     std::ifstream stream(argv[1]);
 
-    const int ALPHALEN = 26;
-    const char OFFSET = 'A';
+    const auto ALPHALEN = 26;
+    const auto OFFSET = 'A';
 
     auto in1 = std::istream_iterator<int>(stream);
     auto in2 = std::istream_iterator<int>();
@@ -42,11 +42,10 @@ main(int argc, char *argv[]) {
         auto colnames = std::vector<char>();
         auto colnum = *in - 1;
 
-        while(colnum >= 0) {
-            auto rem = colnum % ALPHALEN;
-            colnames.push_back(OFFSET + rem);
+        do {
+            colnames.push_back(OFFSET + (colnum % ALPHALEN));
             colnum = colnum / ALPHALEN - 1;
-        }
+        } while(colnum >= 0);
 
         std::copy(colnames.rbegin(), colnames.rend(), out);
         std::cout << std::endl;
