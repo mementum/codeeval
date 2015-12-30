@@ -1,4 +1,4 @@
-/*
+h/*
   Copyright (C) 2015 Daniel Rodriguez
 
   This program is free software: you can redistribute it and/or modify
@@ -33,10 +33,10 @@ bubblesort_interruptus(iter a1, iter a2, iterout out, size_t iterations)
     using itertype = typename std::decay<decltype(*a1)>::type;
 
     for(auto i=0; i < iterations; i++) {
-        auto ops = 0;
+        bool ops = false;
         for(auto a=a1, b=std::next(a1); b != a2; a++, b++) {
             if(*a > *b) {
-                ops++;
+                ops = true;
                 std::iter_swap(a, b);
             }
         }
@@ -76,8 +76,9 @@ main(int argc, char *argv[]) {
     auto &&ostr = std::ostream_iterator<size_t>(std::cout, " ");
     auto &&istr2 = std::istream_iterator<size_t>();
 
+    auto &&bubbles = std::vector<size_t>{};
     while(stream) {
-        auto &&bubbles = std::vector<size_t>{};
+        bubbles.clear();
 
         // Copy all input to size_t until conversion error ('\n' or eof seen)
         auto &&istr1 = std::istream_iterator<size_t>(stream);
