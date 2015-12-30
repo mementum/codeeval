@@ -21,6 +21,7 @@
 from __future__ import (absolute_import, division, print_function,)
 #                        unicode_literals)
 
+import itertools
 import sys
 
 # Small Py2/3 compatibility layer

@@ -234,6 +234,20 @@ void debugout(const T &t)
     std::cout << t << std::endl;
 }
 
+template<typename T>
+void debugout(const std::vector<T> &v)
+{
+    std::cout << "{";
+    if(v.size()) {
+        auto last = std::prev(v.end(), 1);
+        for(auto &&p=v.begin(); p != last; p++)
+            std::cout << *p << ",";
+
+        std::cout << *last;
+    }
+    std::cout << "}" << std::endl;
+}
+
 template<typename T, typename... Args>
 void debugout(const T &t, Args... args) // recursive variadic function
 {
