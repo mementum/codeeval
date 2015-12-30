@@ -35,18 +35,19 @@ else:  # >= 3
 if __name__ == '__main__':
     test_cases = open(sys.argv[1], 'r')
 
-    OFFSET = ord('A') - 1
+    OFFSET = ord('A')
     ALPHALEN = 26
 
     for line in test_cases:
-        colnum = int(line.rstrip('\r\n'))
+        # Excel is 1-based, rebase it to 0
+        colnum = int(line.rstrip('\r\n')) - 1
 
         colnames = list()
-        while colnum:
+        while colnum >= 0:
             div, rem = divmod(colnum, ALPHALEN)
             # map char ... taking boundary (Z) into account
-            colnames.append(chr(OFFSET + (rem or ALPHALEN)))
-            colnum = div - 1 * (not rem)  # remove 1 int if landed on boundary
+            colnames.append(chr(OFFSET + rem))
+            colnum = div - 1
 
         print(''.join(reversed(colnames)))
 
