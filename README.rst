@@ -21,7 +21,7 @@ The challenges below have been 100% solved. The scoring is:
 Achieving the perfect maximum score is impossible because that would imply no
 time usage and no memory comsumption. Faster and leaner programs approach the
 perfect score for each category asymptotically. See:
-https://www.codeeval.com/ranking. (Reference copy below the table)
+https://www.codeeval.com/ranking.
 
 +------+----------+-----------------------------------+----------+--------+--------+-----------+
 | Code | Category | Name                              | Language | Score  |  Time  |  Memory   |
