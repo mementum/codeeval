@@ -12,6 +12,17 @@ same time crafting it to be elegant and reusable.
 Challenges
 ----------
 
+The challenges below have been 100% solved. The scoring is:
+
+  - *Hard*: 0-100
+  - *Medium*: 0-65
+  - *Easy*: 0-35
+
+Achieving the perfect maximum score is impossible because that would imply no
+time usage and no memory comsumption. Faster and leaner programs approach the
+perfect score for each category asymptotically. See:
+https://www.codeeval.com/ranking. (Reference copy below the table)
+
 +------+----------+-----------------------------------+----------+--------+--------+-----------+
 | Code | Category | Name                              | Language | Score  |  Time  |  Memory   |
 |      |          |                                   |          |        |  (ms)  |  (bytes)  |
