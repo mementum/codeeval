@@ -9,6 +9,32 @@ same time crafting it to be elegant and reusable.
   - `Profile <https://www.codeeval.com/profile/mementum/>`_
   - `Solutions <https://www.codeeval.com/public/b52bf7271d666b6369bfe61ff6650b090d42cd1f/>`_
 
+Languages/Compilers
+-------------------
+
+The languages/compiler versions in use at CodeEval:
+
+  - C++: gcc 4.8.1
+  - Python 2: 2.7.3
+  - Python 3: 3.2.3
+
+Notes
+-----
+
+  - C++: Some C++11 features are not fully supported in gcc 4.8.1 and have
+    required some workarounds. It is quite often that the 10 second compilation
+    time barrier is met if a couple of templates are thrown in (this seems to
+    be a regular case with maps) and some things like forward_list and
+    containers adaptors consume memory orders of magnitude above vector and
+    hence are not used even if they would fit (conceptually) the purpose much
+    better
+
+  - Python 3.2.3: It is curious to see that in most of the challenges the time
+    is up to 10x that of Python 2.7.3, whilst memory consumption is roughy
+    1/2. This compensates in the points calculation but it seems rather
+    strange. A bit more modern version of Python 3 would probably deliver
+    different results
+
 Challenges
 ----------
 
@@ -119,7 +145,7 @@ https://www.codeeval.com/ranking.
 +------+----------+-----------------------------------+----------+--------+--------+-----------+
 | 0158 | Medium   | `Interrupted Bubble Sort`_        | C++      | 64.969 |      4 |     11209 |
 |      |          |                                   +----------+--------+--------+-----------+
-|      |          |                                   | Python 2 | 58.426 |    115 |   3999382 |
+|      |          | *Date*: 2016-01-01                | Python 2 | 58.426 |    115 |   3999382 |
 |      |          |                                   +----------+--------+--------+-----------+
 |      |          |                                   | Python 3 | 57.064 |    275 |   4543691 |
 +------+----------+-----------------------------------+----------+--------+--------+-----------+
@@ -129,11 +155,11 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+--------+-----------+
 |      |          |                                   | Python 3 | 58.437 |   1107 |   1912832 |
 +------+----------+-----------------------------------+----------+--------+--------+-----------+
-| 0200 | Medium   | `Sort Matrix Columns`_            | C++      | 64.904 |     13 |     32905 |
+| 0200 | Medium   | `Sort Matrix Columns`_            | C++      | 64.937 |     13 |     12025 |
 |      |          |                                   +----------+--------+--------+-----------+
-|      |          |                                   | Python 2 |        |        |           |
+|      |          |                                   | Python 2 | 58.060 |    148 |   4166702 |
 |      |          |                                   +----------+--------+--------+-----------+
-|      |          |                                   | Python 3 |        |        |           |
+|      |          |                                   | Python 3 | 57.546 |   1262 |   2162688 |
 +------+----------+-----------------------------------+----------+--------+--------+-----------+
 | 0223 | Medium   | `Alternative Reality`_            | C++      | 64.974 |      3 |      8848 |
 |      |          |                                   +----------+--------+--------+-----------+

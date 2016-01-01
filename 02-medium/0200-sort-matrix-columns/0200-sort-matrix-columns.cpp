@@ -21,79 +21,29 @@
 
 // Headers for the implementation
 #include <algorithm>  // copy, stable_sort
-#include <iterator>  // istream_iterator, ostream_iterator
-#include <map>  // multimap
-#include <math.h>  // sqrt
-#include <type_traits>
+#include <iterator>
 #include <vector>
 
-#include <cstdint>  // int8_t
 
-/*
-  Loosely defined challenge, because whether sorting should be stable or not
-  (order preserving) is not stated. The sample from the description seems to
-  show that the last of the "min" values is the one taken into account.
-
-  Like when using std::min_elemeent, which returns the last "min" because it
-  has to traverse the range before knowing which one is the last.
-
-  That's why the insertion in the map has to be done looking at the row (vector
-  range) values in reverse order, to make sure last comes first.
-
-  The problem is really about how to sort several vectors based on the initial
-  ordering of 1 vector.
-*/
-
-using MATRIXVAL_T = ssize_t;
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Stream Imbuer for Parsing
-///////////////////////////////////////////////////////////////////////////////
 struct SeparatorReader: std::ctype<char>
 {
     template<typename T>
-    SeparatorReader(T &&seps):
-        std::ctype<char>(get_table(seps), true) {}
+    SeparatorReader(const T &seps): std::ctype<char>(get_table(seps), true) {}
 
     template<typename T>
-    std::ctype_base::mask const *get_table(T &&seps) {
-        auto rc = new std::ctype_base::mask[std::ctype<char>::table_size]();
-        for(auto &sep: seps)
+    std::ctype_base::mask const *get_table(const T &seps) {
+        auto &&rc = new std::ctype_base::mask[std::ctype<char>::table_size]();
+        for(auto &&sep: seps)
             rc[static_cast<unsigned char>(sep)] = std::ctype_base::space;
         return &rc[0];
     }
 };
 
 
-template<typename TIter, typename TOut, typename TOutSep>
-auto
-column_sort(TIter first, TIter last, TOut out, TOutSep outsep)
-{
-    using ValT = typename std::decay<decltype(*first)>::type;
-    std::multimap<ValT, size_t> keycols;
+#define OPTIMIZE 1
 
-    auto msize = static_cast<ssize_t>(std::sqrt(std::distance(first, last)));
-    for(auto i=0; i < msize; i++) {
-        auto v1 = std::next(first, i * msize);
-        auto v2 = std::next(v1, msize);
-
-        // if(not std::equal(std::next(v1), v2, v1) and keycols.empty()) {
-        if(keycols.empty()) {
-            auto &&v2r = std::reverse_iterator<TIter>(v2);
-            auto &&v1r = std::reverse_iterator<TIter>(v1);
-
-            for(auto v=v2r; v != v1r; v++)
-                keycols.emplace(*v, std::distance(v, v1r) - 1);
-        }
-
-        if(i)
-            *outsep++ = "";   // std::cout << "| ";
-
-        for(auto &&k: keycols)
-            *out++ = *std::next(v1, k.second);
-    }
-}
+// By setting OPTIMIZE to 0, the algorithm will accept any matrix size (up to
+// the limit of the numeric type of the machine)
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -102,34 +52,65 @@ column_sort(TIter first, TIter last, TOut out, TOutSep outsep)
 int
 main(int argc, char *argv[])
 {
-    const size_t MAX_EXPECTED_SIZE = 15 * 15;
-    const char SEPARATOR[] = "| ";
-
     std::ifstream stream(argv[1]);  // imbue ensures \n will deliver an error
-    stream.imbue(std::locale(stream.getloc(), new SeparatorReader(SEPARATOR)));
+    stream.imbue(std::locale(stream.getloc(), new SeparatorReader(" ")));
 
-    auto &&v0 = std::vector<MATRIXVAL_T>(MAX_EXPECTED_SIZE);
+    using TRow = std::vector<int>;
 
-    auto &&out = std::ostream_iterator<MATRIXVAL_T>(std::cout, " ");
-    auto &&outsep = std::ostream_iterator<const char *>(std::cout, SEPARATOR);
-    auto &&in2 = std::istream_iterator<MATRIXVAL_T>();
+#if OPTIMIZE
+    const auto MAX_DIMENSION = 15;
+    auto m = std::vector<TRow>(MAX_DIMENSION, TRow(MAX_DIMENSION));
+#endif
+
     while(stream) {
-        // Need to recreate after each stream error (eol)
-        auto &&in1 = std::istream_iterator<MATRIXVAL_T>(stream);
+#if not OPTIMIZE
+        auto m = std::vector<TRow>{};
+#endif
 
-        auto &&v0last = std::copy(in1, in2, v0.begin());
-        if(v0last == v0.begin())
-            break;  // nothing read (empty line)
+        int msize = std::numeric_limits<int>::max();  // upper limit
+        char token;
+        for(auto j=0, i=0, input=0; j < msize; i=0, j++) {
+            for(; i < msize && stream >> input; i++) {
+#if OPTIMIZE
+                m[i][j] = input;
+#else
+                if(not j)
+                    m.push_back(TRow{input});
+                else
+                    m[i].push_back(input);
+#endif
+            }
+            msize = i;  // update matrix size in place to stop reading
 
-        column_sort(v0.begin(), v0last, out, outsep);
+            stream.clear();  // clear flag (non numeric token stopped input)
+            stream >> token;  // skip non numeric token (eol or |)
+        }
+        if(not msize)
+            break;  // eof found
+
+#if not OPTIMIZE
+        std::sort(m.begin(), std::next(m.begin(), msize));
+#else
+        // Compare vectors only down to the defined size
+        std::sort(
+            m.begin(), std::next(m.begin(), msize),
+            [msize] (const TRow &lhs, const TRow &rhs) -> bool {
+                return std::lexicographical_compare(
+                    lhs.begin(), std::next(lhs.begin(), msize),
+                    rhs.begin(), std::next(rhs.begin(), msize));
+            }
+            );
+#endif
+
+
+        // output interleaving columns
+        for(auto j=0; j < msize; j++) {
+            if(j)
+                std::cout << "| ";
+            for(auto i=0; i < msize; i++)
+                std::cout << m[i][j] << ' ';
+        }
         std::cout << std::endl;
-
-        if(stream.eof())
-            break;
-
-        // Clear failbit and skip the eol which stopped input reading
-        stream.clear();
-        stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 
     return 0;
