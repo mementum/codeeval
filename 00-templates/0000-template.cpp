@@ -256,6 +256,23 @@ void debugout(const T &t, Args... args) // recursive variadic function
 }
 
 
+
+///////////////////////////////////////////////////////////////////////////////
+// C++14 equivalent make_unique(s)
+///////////////////////////////////////////////////////////////////////////////
+template<typename T, typename ...Args>
+std::unique_ptr<T> make_unique( Args&& ...args )
+{
+    return std::unique_ptr<T>(new T( std::forward<Args>(args)... ) );
+}
+
+template<typename T, typename TSize, typename ...Args>
+std::unique_ptr<T[]> make_unique_array(TSize size, Args&& ...args )
+{
+    return std::unique_ptr<T[]>(new T[size]( std::forward<Args>(args)... ) );
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // Stream Imbuer for Parsing
 // http://stackoverflow.com/questions/1894886/parsing-a-comma-delimited-stdstring
