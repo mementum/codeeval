@@ -45,6 +45,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+--------+-----------+
 |      |          |                                   | Python 3 | 89.177 |   1129 |   2170880 |
 +------+----------+-----------------------------------+----------+--------+--------+-----------+
+| 0069 | Hard     | `Distinct Subsequences`_          | C++      | 99.959 |      3 |      9772 |
+|      |          |                                   +----------+--------+--------+-----------+
+|      |          | *Date*: 2016-01-01                | Python 2 | 89.910 |    120 |   3979474 |
+|      |          |                                   +----------+--------+--------+-----------+
+|      |          |                                   | Python 3 | 88.936 |   1179 |   2166784 |
++------+----------+-----------------------------------+----------+--------+--------+-----------+
 | 0072 | Hard     | `Minimum Path Sum`_               | C++      | 99.939 |      5 |     13241 |
 |      |          |                                   +----------+--------+--------+-----------+
 |      |          |                                   | Python 2 | 93.491 |    136 |   3996781 |
@@ -81,7 +87,7 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+--------+-----------+
 |      |          |                                   | Python 3 | 58.625 |   1133 |   1736704 |
 +------+----------+-----------------------------------+----------+--------+--------+-----------+
-| 0013 | Medium   | `Remove Characters`_              | C++      | 64.970 |      3 |     11866 |
+s| 0013 | Medium   | `Remove Characters`_              | C++      | 64.970 |      3 |     11866 |
 |      |          |                                   +----------+--------+--------+-----------+
 |      |          |                                   | Python 2 | 58.528 |    109 |   3946200 |
 |      |          |                                   +----------+--------+--------+-----------+
@@ -151,6 +157,7 @@ https://www.codeeval.com/ranking.
 .. hard
 .. _Longest Common Subsequence: https://www.codeeval.com/public_sc/6/
 .. _String Permutations: https://www.codeeval.com/public_sc/14/
+.. _Distinct Subsequences: https://www.codeeval.com/public_sc/69/
 .. _Minimum Path Sum: https://www.codeeval.com/public_sc/72/
 .. _DNA Alignment: https://www.codeeval.com/public_sc/171/
 .. _Glue Shredded Pieces: https://www.codeeval.com/public_sc/185/
