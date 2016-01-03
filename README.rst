@@ -89,6 +89,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+--------+-----------+
 |      |          |                                   | Python 3 | 87.646 |    298 |   4555150 |
 +------+----------+-----------------------------------+----------+--------+--------+-----------+
+| 0086 | Hard     | `Poker Hands`_                    | C++      |        |        |           |
+|      |          |                                   +----------+--------+--------+-----------+
+|      |          | *Date*: 2016-01-03                | Python 2 | 88.737 |    136 |   4438696 |
+|      |          |                                   +----------+--------+--------+-----------+
+|      |          |                                   | Python 3 |        |        |           |
++------+----------+-----------------------------------+----------+--------+--------+-----------+
 | 0171 | Hard     | `DNA Alignment`_                  | C++      | 99.903 |     12 |     15387 |
 |      |          |                                   +----------+--------+--------+-----------+
 |      |          |                                   | Python 2 | 81.440 |   1627 |   4371450 |
@@ -193,6 +199,7 @@ https://www.codeeval.com/ranking.
 .. _Palindromic Ranges: https://www.codeeval.com/public_sc/47/
 .. _Distinct Subsequences: https://www.codeeval.com/public_sc/69/
 .. _Minimum Path Sum: https://www.codeeval.com/public_sc/72/
+.. _Poker Hands: https://www.codeeval.com/public_sc/86/
 .. _DNA Alignment: https://www.codeeval.com/public_sc/171/
 .. _Glue Shredded Pieces: https://www.codeeval.com/public_sc/185/
 .. _Brainf*ck: https://www.codeeval.com/public_sc/210/
