@@ -29,7 +29,6 @@ if sys.version_info.major == 2:
     MAXINT = sys.maxint
     MININT = -sys.maxint - 1
 
-    import itertools
     filter = itertools.ifilter
     map = itertools.imap
     range = xrange
@@ -43,6 +42,6 @@ else:  # >= 3
 if __name__ == '__main__':
     test_cases = open(sys.argv[1], 'r')
     for line in test_cases:
-        ls = line.rstrip('\r\n')
+        ls = line.rstrip('\n')
 
     test_cases.close()
