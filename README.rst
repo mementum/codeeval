@@ -71,6 +71,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+--------+-----------+
 |      |          |                                   | Python 3 | 89.177 |   1129 |   2170880 |
 +------+----------+-----------------------------------+----------+--------+--------+-----------+
+| 0047 | Hard     | `Palindromic Ranges`_             | C++      | 99.959 |      3 |      9688 |
+|      |          |                                   +----------+--------+--------+-----------+
+|      |          | *Date*: 2016-01-02                | Python 2 | 89.509 |    132 |   4122958 |
+|      |          |                                   +----------+--------+--------+-----------+
+|      |          |                                   | Python 3 | 87.507 |    292 |   4627414 |
++------+----------+-----------------------------------+----------+--------+--------+-----------+
 | 0069 | Hard     | `Distinct Subsequences`_          | C++      | 99.959 |      3 |      9772 |
 |      |          |                                   +----------+--------+--------+-----------+
 |      |          | *Date*: 2016-01-01                | Python 2 | 89.910 |    120 |   3979474 |
@@ -182,6 +188,7 @@ https://www.codeeval.com/ranking.
 
 .. hard
 .. _Longest Common Subsequence: https://www.codeeval.com/public_sc/6/
+.. _Prefix Expressions: https://www.codeeval.com/public_sc/7/
 .. _String Permutations: https://www.codeeval.com/public_sc/14/
 .. _Palindromic Ranges: https://www.codeeval.com/public_sc/47/
 .. _Distinct Subsequences: https://www.codeeval.com/public_sc/69/
