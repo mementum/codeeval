@@ -81,12 +81,12 @@ main(int argc, char *argv[])
 #endif
             }
             msize = i;  // update matrix size in place to stop reading
+            if(not msize)
+                break;  // eof found
 
             stream.clear();  // clear flag (non numeric token stopped input)
             stream >> token;  // skip non numeric token (eol or |)
         }
-        if(not msize)
-            break;  // eof found
 
 #if not OPTIMIZE
         std::sort(m.begin(), std::next(m.begin(), msize));
