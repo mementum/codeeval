@@ -23,80 +23,64 @@
 
 // Headers for the implementation
 #include <algorithm>
-#include <array>
 #include <iterator>
 // #include <map>
-#include <set>
 #include <string>
 #include <vector>
 
 
-// Even with simplifications it fails to compile under 10 seconds
+// Version which removes most of C++ 11 (and even non C++ 11 but STL) things to
+// try to decrease compilations times and get over the 10sec compilation
+// barrier
 
 
 const auto NUMCARDS = 5;
 
-using CardT = std::array<char, 2>;
-using HandT = std::array<CardT, NUMCARDS>;
-#if 0
-using KindsT = std::array<char, NUMCARDS>;
-using SuitsT = KindsT;
-#endif
+const auto SCORE_STRAIGHT_FLUSH = 8000000;
+const auto SCORE_FOUR_OF_A_KIND = 7000000;
+const auto SCORE_FULL_HOUSE = 6000000;
+const auto SCORE_FLUSH = 5000000;
+const auto SCORE_STRAIGHT = 4000000;
+const auto SCORE_THREE_OF_A_KIND = 3000000;
+const auto SCORE_TWO_PAIR = 2000000;
+const auto SCORE_PAIR = 1000000;
+const auto SCORE_HIGH_CARD = 0;
+
+const static std::string DECK{"23456789TJQKA"};
+const static std::string DECK_STRAIGHT{"2345A23456789TJQKA"};
+
+bool
+kinds_cmp(const char l, const char r)
+{
+    return DECK.find(l) < DECK.find(r);
+}
 
 
 int
-hand_eval(const HandT &hand)
+hand_eval(const char hand[NUMCARDS][2])
 {
-    const static auto SCORE_STRAIGHT_FLUSH = 8000000;
-    const static auto SCORE_FOUR_OF_A_KIND = 7000000;
-    const static auto SCORE_FULL_HOUSE = 6000000;
-    const static auto SCORE_FLUSH = 5000000;
-    const static auto SCORE_STRAIGHT = 4000000;
-    const static auto SCORE_THREE_OF_A_KIND = 3000000;
-    const static auto SCORE_TWO_PAIR = 2000000;
-    const static auto SCORE_PAIR = 1000000;
-    const static auto SCORE_HIGH_CARD = 0;
-
-    const static std::string DECK{"23456789TJQKA"};
-    const static std::string DECK_STRAIGHT{"2345A23456789TJQKA"};
-
     using RankT = std::vector<std::pair<int, int>>;
 
-#if 0
-    KindsT kinds;
-    SuitsT suits;
-#else
     char kinds[5];
     char *kend = kinds + NUMCARDS;
-    char suits[5];
-#endif
 
-    for(auto i=0; i < NUMCARDS; i++) {
+    for(int i=0; i < NUMCARDS; i++)
         kinds[i] = hand[i][0];
-        suits[i] = hand[i][1];
-    }
 
     // Sort the kinds according to face value (and not ascii char)
     // keep the asci chars to compare against the DECK strings
-    std::sort(kinds, kend,
-              [](char l, char r) -> bool { return DECK.find(l) < DECK.find(r); });
+    std::sort(kinds, kend, kinds_cmp);
 
     // Calculate a flush by seeing if all suits are equal
-#if 0
-    auto flush = std::all_of(
-        suits.begin(), suits.end(),
-        [&suits](SuitsT::value_type &s) { return s == suits[0]; });
-#else
-    int slen = 0;
-    for(auto i=1; i < NUMCARDS; i++)
-        slen += suits[0] == suits[1];
-    bool flush = slen == (NUMCARDS - 1);
-#endif
+    int slen = 1;
+    for(int i=1; i < NUMCARDS; i++)
+        slen += hand[0][1] == hand[i][1];
+    bool flush = slen == NUMCARDS;
 
     // Find the straight by comparing the sorted kinds to the master DECK_STRAIGHT
     auto straight = DECK_STRAIGHT.find(kinds, 0, NUMCARDS);
 
-    auto score = 0;
+    int score = 0;
     if(straight != DECK_STRAIGHT.npos) {
         score = flush ? SCORE_STRAIGHT_FLUSH : SCORE_STRAIGHT;
         score += straight;
@@ -104,8 +88,11 @@ hand_eval(const HandT &hand)
         // Count distinct card groupins (1s, 2s, 3s and 4s)
         // keep count and associated face value
         RankT rank;
-        for(auto &&k: std::set<char>(kinds, kend)) {
-            auto r = std::make_pair(std::count(kinds, kend, k), DECK.find(k));
+        for(auto i=0; i < NUMCARDS; i++) {
+            auto k = kinds[i];
+            int c = std::count(kinds, kend, k);
+            i += c - 1;  // skip repeated face values
+            auto r = std::make_pair(c, DECK.find(k));
             rank.push_back(r);
         }
 
@@ -114,12 +101,12 @@ hand_eval(const HandT &hand)
 
         // Best rank and best card
         auto rank1 = rank.rbegin();
-        auto hrank = rank1->first;
-        auto hcard = rank1->second;
+        int hrank = rank1->first;
+        int hcard = rank1->second;
 
         // Best next rank (don't need the card)
         auto rank2 = std::next(rank1, 1);
-        auto lrank = rank2->first;
+        int lrank = rank2->first;
 
         if(hrank == 4) {
             // Only 1 four of a kind for a given card. 2 4s -> highest card wins
@@ -127,21 +114,21 @@ hand_eval(const HandT &hand)
             score += hcard;
         } else if(hrank == 3) {
             // Only 1 three of a kind for a card. 2 3s -> highest card wins
-            score = lrank == 2 ? SCORE_FULL_HOUSE : SCORE_THREE_OF_A_KIND;
+            score = (lrank == 2) ? SCORE_FULL_HOUSE : SCORE_THREE_OF_A_KIND;
             score += hcard;
         } else if(hrank == 2) {
             // For either two pair / pair value distinct cards following rank
             // 1 -> 1, 2 -> 2s for two pair - 3 -> 1s, 1 -> 2 for pair
-            score = lrank == 2 ? SCORE_TWO_PAIR : SCORE_PAIR;
+            score = (lrank == 2) ? SCORE_TWO_PAIR : SCORE_PAIR;
             auto i = 0;
             for(auto &&p: rank)
-                score += std::pow(13, i++) * p.second;
+                score += static_cast<int>(std::pow(13, i++)) * p.second;
         } else {
             // For either flush / high card value all cards following rank
             score = flush ? SCORE_FLUSH : SCORE_HIGH_CARD;
             auto i = 0;
             for(auto &&p: rank)
-                score += std::pow(13, i++) * p.second;
+                score += static_cast<int>(std::pow(13, i++)) * p.second;
         }
     }
     return score;
@@ -164,27 +151,28 @@ main(int argc, char *argv[]) {
 #endif
     std::ifstream stream(argv[1]);
 
-    HandT lhand, rhand;
+    char lhand[NUMCARDS][2];
+    char rhand[NUMCARDS][2];
 
-    auto in1 = std::istream_iterator<char>(stream);
-    auto in2 = std::istream_iterator<char>();
+    std::istream_iterator<char> in1(stream);
+    std::istream_iterator<char> in2;
     while(stream) {
         // Get left hand by filling (Value/Suit)
-        for(auto card=lhand.begin(); in1 != in2 && card != lhand.end(); card++) {
-            (*card)[0] = *in1++;
-            (*card)[1] = *in1++;
+        for(int i=0; in1 != in2 && i < NUMCARDS; i++) {
+            lhand[i][0] = *in1++;
+            lhand[i][1] = *in1++;
         }
 
         // Get right hand by filling the cards (Value/Suit)
-        for(auto card=rhand.begin(); in1 != in2 && card != rhand.end(); card++) {
-            (*card)[0] = *in1++;
-            (*card)[1] = *in1++;
+        for(int i=0; in1 != in2 && i < NUMCARDS; i++) {
+            rhand[i][0] = *in1++;
+            rhand[i][1] = *in1++;
         }
 
         // Evaluate the hands, compare
-        auto lscore = hand_eval(lhand);
-        auto rscore = hand_eval(rhand);
-        auto cmped = (lscore > rscore) - (rscore > lscore);
+        int lscore = hand_eval(lhand);
+        int rscore = hand_eval(rhand);
+        int cmped = (lscore > rscore) - (rscore > lscore);
 
 #if 0
         // print the string
