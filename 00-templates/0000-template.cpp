@@ -255,6 +255,19 @@ void debugout(const T &t, Args... args) // recursive variadic function
     debugout(args...);
 }
 
+template<typename T, size_t TSize=0>
+void debugout(const std::array<T, TSize> &v)
+{
+    std::cout << "{";
+    if(TSize) {
+        auto last = std::prev(v.end(), 1);
+        for(auto &&p=v.begin(); p != last; p++)
+            std::cout << *p << ",";
+
+        std::cout << *last;
+    }
+    std::cout << "}" << std::endl;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
