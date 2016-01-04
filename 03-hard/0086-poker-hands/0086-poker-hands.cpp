@@ -24,7 +24,6 @@
 // Headers for the implementation
 #include <algorithm>
 #include <iterator>
-// #include <map>
 #include <string>
 #include <vector>
 
@@ -32,6 +31,9 @@
 // Version which removes most of C++ 11 (and even non C++ 11 but STL) things to
 // try to decrease compilations times and get over the 10sec compilation
 // barrier
+
+// Although it seems that the most effective thing is to complain at the
+// CodeEval feedback site and suddenly C++ compiles
 
 
 const auto NUMCARDS = 5;
@@ -49,18 +51,9 @@ const auto SCORE_HIGH_CARD = 0;
 const static std::string DECK{"23456789TJQKA"};
 const static std::string DECK_STRAIGHT{"2345A23456789TJQKA"};
 
-bool
-kinds_cmp(const char l, const char r)
-{
-    return DECK.find(l) < DECK.find(r);
-}
-
-
 int
 hand_eval(const char hand[NUMCARDS][2])
 {
-    using RankT = std::vector<std::pair<int, int>>;
-
     char kinds[5];
     char *kend = kinds + NUMCARDS;
 
@@ -69,9 +62,12 @@ hand_eval(const char hand[NUMCARDS][2])
 
     // Sort the kinds according to face value (and not ascii char)
     // keep the asci chars to compare against the DECK strings
-    std::sort(kinds, kend, kinds_cmp);
+    std::sort(kinds, kend,
+              [](const char l, const char r) -> bool
+              { return DECK.find(l) < DECK.find(r); });
 
     // Calculate a flush by seeing if all suits are equal
+    // alternative is to separate suits to char[5] and check with all_of
     int slen = 1;
     for(int i=1; i < NUMCARDS; i++)
         slen += hand[0][1] == hand[i][1];
@@ -87,13 +83,11 @@ hand_eval(const char hand[NUMCARDS][2])
     } else {
         // Count distinct card groupins (1s, 2s, 3s and 4s)
         // keep count and associated face value
-        RankT rank;
+        std::vector<std::pair<int, int>> rank;
         for(auto i=0; i < NUMCARDS; i++) {
-            auto k = kinds[i];
-            int c = std::count(kinds, kend, k);
+            int c = std::count(kinds, kend, kinds[i]);
             i += c - 1;  // skip repeated face values
-            auto r = std::make_pair(c, DECK.find(k));
-            rank.push_back(r);
+            rank.push_back(std::make_pair(c, DECK.find(kinds[i])));
         }
 
         // Sort to make it a real rank (it's pair so {1, 2} is before {1, 3}
@@ -142,29 +136,22 @@ hand_eval(const char hand[NUMCARDS][2])
 
 int
 main(int argc, char *argv[]) {
-    // if "const" then [] cannot be used
-#if 0
-    std::map<int, const char *> results{
-        {1, "left"},
-        {-1, "right"},
-        {0, "none"} };
-#endif
     std::ifstream stream(argv[1]);
+    std::istream_iterator<char> in1(stream);
 
+    const char *results[3] = {"right", "none", "left"};
     char lhand[NUMCARDS][2];
     char rhand[NUMCARDS][2];
 
-    std::istream_iterator<char> in1(stream);
-    std::istream_iterator<char> in2;
     while(stream) {
         // Get left hand by filling (Value/Suit)
-        for(int i=0; in1 != in2 && i < NUMCARDS; i++) {
+        for(int i=0; i < NUMCARDS; i++) {
             lhand[i][0] = *in1++;
             lhand[i][1] = *in1++;
         }
 
         // Get right hand by filling the cards (Value/Suit)
-        for(int i=0; in1 != in2 && i < NUMCARDS; i++) {
+        for(int i=0; i < NUMCARDS; i++) {
             rhand[i][0] = *in1++;
             rhand[i][1] = *in1++;
         }
@@ -174,15 +161,8 @@ main(int argc, char *argv[]) {
         int rscore = hand_eval(rhand);
         int cmped = (lscore > rscore) - (rscore > lscore);
 
-#if 0
         // print the string
-        std::cout << results[cmped] << std::endl;
-#else
-        if(cmped == 1) std::cout << "left";
-        else if(cmped == -1) std::cout << "right";
-        else std::cout << "none";
-        std::cout << std::endl;
-#endif
+        std::cout << results[cmped + 1] << std::endl;
     }
 
     return 0;
