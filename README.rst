@@ -50,7 +50,8 @@ perfect score for each category asymptotically. See:
 https://www.codeeval.com/ranking.
 
 +------+----------+-----------------------------------+----------+--------+--------+-----------+
-| Code | Category | Name                              | Language | Score  |  Time  |  Memory   |
+|      | Category | Name                              | Language | Score  |  Time  |  Memory   |
+| Code |          |                                   |          |        +--------+-----------+
 |      |          |                                   |          |        |  (ms)  |  (bytes)  |
 +======+==========+===================================+==========+========+========+===========+
 | 0006 | Hard     | `Longest Common Subsequence`_     | C++      | 99.910 |      4 |     29173 |
