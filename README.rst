@@ -217,6 +217,7 @@ https://www.codeeval.com/ranking.
 .. _Palindromic Ranges: https://www.codeeval.com/public_sc/47/
 .. _Distinct Subsequences: https://www.codeeval.com/public_sc/69/
 .. _Minimum Path Sum: https://www.codeeval.com/public_sc/72/
+.. _Find Min: https://www.codeeval.com/public_sc/85/
 .. _Poker Hands: https://www.codeeval.com/public_sc/86/
 .. _DNA Alignment: https://www.codeeval.com/public_sc/171/
 .. _Glue Shredded Pieces: https://www.codeeval.com/public_sc/185/
