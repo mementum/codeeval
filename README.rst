@@ -156,6 +156,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 58.525 | 1051 |  2166784 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0073 | Medium   | `Decode Numbers`_                 | C++      | 64.975 |    3 |     8789 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-01-05                | Python 2 | 58.487 |  111 |  3968903 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 57.180 |  268 |  3968903 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0089 | Medium   | `Pass Triangle`_                  | C++      | 64.944 |   11 |    12305 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 2 | 57.495 |  173 |  4479031 |
@@ -231,6 +237,7 @@ https://www.codeeval.com/ranking.
 .. _Trailing String: https://www.codeeval.com/public_sc/32/
 .. _Jolly Jumpers: https://www.codeeval.com/public_sc/43/
 .. _Reverse and Add: https://www.codeeval.com/public_sc/45/
+.. _Decode Numbers: https://www.codeeval.com/public_sc/73/
 .. _Pass Triangle: https://www.codeeval.com/public_sc/89/
 .. _Interrupted Bubble Sort: https://www.codeeval.com/public_sc/158/
 .. _Column Names: https://www.codeeval.com/public_sc/197/
