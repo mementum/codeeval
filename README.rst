@@ -49,9 +49,9 @@ time usage and no memory comsumption. Faster and leaner programs approach the
 perfect score for each category asymptotically. See:
 https://www.codeeval.com/ranking.
 
-                                                                          +------+----------+
-                                                                          | (ms) | (bytes)  |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+|      |          |                                   |          |        | (ms) | (bytes)  |
+|      |          |                                   |          |        +------+----------+
 | Code | Category | Name                              | Language | Score  | Time |  Memory  |
 +======+==========+===================================+==========+========+======+==========+
 | 0006 | Hard     | `Longest Common Subsequence`_     | C++      | 99.910 |    4 |    29173 |
