@@ -30,8 +30,8 @@ Notes
     better
 
   - Python 3.2.3: It is curious to see that in most of the challenges the time
-    is up to 10x that of Python 2.7.3, whilst memory consumption is roughy
-    1/2. This compensates in the points calculation but it seems rather
+    can be up to 10x that of Python 2.7.3, whilst memory consumption is roughly
+    a 1/2. This compensates in the points calculation but it seems rather
     strange. A bit more modern version of Python 3 would probably deliver
     different results
 
@@ -266,6 +266,7 @@ https://www.codeeval.com/ranking.
 .. _To PI or not to PI: https://www.codeeval.com/public_sc/228/
 
 .. easy
+.. _Fizz Buzz: https://www.codeeval.com/public_sc/1/
 .. _Sum of Primes: https://www.codeeval.com/public_sc/4/
 .. _String Mask: https://www.codeeval.com/public_sc/199/
 .. _find the Highest Score: https://www.codeeval.com/public_sc/208/
