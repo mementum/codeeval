@@ -234,6 +234,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 30.568 |  294 |  4694034 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0220 | Easy     | `Trick or Treat`_                 | C++      | 34.986 |    3 |     8760 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-01-09                | Python 2 | 31.486 |  111 |  3976367 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 30.781 |  269 |  4490559 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 
 .. hard
 .. _Longest Common Subsequence: https://www.codeeval.com/public_sc/6/
@@ -269,4 +275,5 @@ https://www.codeeval.com/ranking.
 .. _Fizz Buzz: https://www.codeeval.com/public_sc/1/
 .. _Sum of Primes: https://www.codeeval.com/public_sc/4/
 .. _String Mask: https://www.codeeval.com/public_sc/199/
-.. _find the Highest Score: https://www.codeeval.com/public_sc/208/
+.. _Find the Highest Score: https://www.codeeval.com/public_sc/208/
+.. _Trick or Treat: https://www.codeeval.com/public_sc/220/
