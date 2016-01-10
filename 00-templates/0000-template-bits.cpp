@@ -311,3 +311,116 @@ trim(const std::string& str)
     auto last = str.find_last_not_of(' ');
     return str.substr(first, (last - first + 1));
 }
+
+
+template <typename T>
+auto
+is_palindrome(T n)
+{
+    T forward = n, backwards = 0;
+    while(forward) {
+        backwards = 10 * backwards + forward % 10;
+        forward /= 10;
+    }
+    return n == backwards;
+}
+
+template <typename T>
+auto
+reverse(T n)
+{
+    T forward = n, backwards = 0;
+    while(forward) {
+        backwards = 10 * backwards + forward % 10;
+        forward /= 10;
+    }
+    return backwards;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Prime check
+
+// Check up to the square root
+template<typename T>
+auto
+is_prime(const T &n)
+{
+    if(n == 2 or n == 3)
+        return true;
+
+    if(n < 2 or not (n & 1) or not (n % 3))
+        return false;
+
+    T rend = static_cast<T>(std::sqrt(n)) + 1;
+    for(T i=3; i < rend; i += 2)
+        if(not (n % i))
+            return false;
+
+    return true;
+}
+
+
+// AKS: (bound to fail beyond 63)
+struct Expand_X_1
+{
+    // This is a "generator" expression. Each call to ++ generates the next
+    // value. And operator bool() allows to check if the generator is done or
+    // it can still deliver values
+    bool done;
+    using tlong = unsigned long long;
+    tlong n;
+    tlong r;
+    tlong i;
+    tlong c;
+
+    Expand_X_1(tlong n) : done(false), n(n), r(n / 2 + 1), i(0), c(1) {}
+
+    using iterator_category = std::input_iterator_tag;
+    using value_type = tlong;
+    using reference = const value_type &;
+    using pointer = const value_type *;
+    using difference_type = ptrdiff_t;
+
+    // https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Safe_bool
+    explicit operator bool() const { return not done; }
+
+    reference operator *() const { return c; }
+    pointer operator ->() const { return &c; }
+
+    Expand_X_1 &operator ++() {
+        if(i == r) {
+            done = true;
+            return *this;
+        }
+        c = c * (n - i) / (i + 1);
+        i++;
+        return *this;
+    }
+
+#if 0
+    Expand_X_1 operator++(tlong) {
+        Expand_X_1 const tmp(*this);
+        ++*this;
+        return tmp;
+    }
+#endif
+};
+
+
+auto
+aks(long p)
+{
+    if(p == 2)
+        return true;
+
+    auto ex1 = Expand_X_1(p);
+    while(++ex1) {
+        debugout("ex1 is: ", *ex1);
+        if((*ex1) % p)
+            return false;
+    }
+
+    debugout(" i was here ");
+    return true;
+}
