@@ -234,6 +234,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 30.335 |  535 |  4467173 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0024 | Easy     | `Sum of Integers from File`_      | C++      | 34.987 |    3 |     8760 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-01-04                | Python 2 | 31.510 |  109 |  3952575 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 30.805 |  266 |  4468506 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0199 | Easy     | `String Mask`_                    | C++      | 34.982 |    3 |    13846 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2015-12-22                | Python 2 | 31.485 |  111 |  3978136 |
@@ -288,6 +294,7 @@ https://www.codeeval.com/ranking.
 .. _Fizz Buzz: https://www.codeeval.com/public_sc/1/
 .. _Prime Palindrome: https://www.codeeval.com/public_sc/3/
 .. _Sum of Primes: https://www.codeeval.com/public_sc/4/
+.. _Sum of Integers from File: https://www.codeeval.com/public_sc/24/
 .. _String Mask: https://www.codeeval.com/public_sc/199/
 .. _Find the Highest Score: https://www.codeeval.com/public_sc/208/
 .. _Trick or Treat: https://www.codeeval.com/public_sc/220/
