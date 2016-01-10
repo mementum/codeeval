@@ -424,3 +424,22 @@ aks(long p)
     debugout(" i was here ");
     return true;
 }
+
+
+bool isprime(int number)
+{
+    if((not (number & 1)) and number != 2)
+        return false;
+    if(number < 2)
+        return false;
+    if(number % 3 == 0 and number != 3)
+        return false;
+
+    // if(number < 1373653) {
+    for(auto k=1; 36 * k * k - 12 * k < number; ++k)
+        if ((number % (6 * k + 1) == 0) or (number % (6 * k - 1) == 0))
+            return false;
+
+    return true;
+    // }
+}
