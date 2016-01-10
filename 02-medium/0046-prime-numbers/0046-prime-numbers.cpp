@@ -19,140 +19,31 @@
 #include <fstream>
 #include <iostream>
 
-#include <cmath>
-#include <vector>
+#include <algorithm>
 
-template<typename T>
-void debugout(const T &t)
+// There is a limit to the tradeoff memoization / time spent calculating the
+// primes. Pre-memoization is the best (it could of course be done off-line
+// given that prime numbers is a recurring problem and the result would be
+// stored in an array for quick lookup access
+
+template <typename T>
+auto
+isprime(T number)
 {
-    std::cout << t << std::endl;
-}
-
-template<typename T>
-void debugout(const std::vector<T> &v)
-{
-    std::cout << "{";
-    if(v.size()) {
-        auto last = std::prev(v.end(), 1);
-        for(auto &&p=v.begin(); p != last; p++)
-            std::cout << *p << ",";
-
-        std::cout << *last;
-    }
-    std::cout << "}" << std::endl;
-}
-
-template<typename T, typename... Args>
-void debugout(const T &t, Args... args) // recursive variadic function
-{
-    std::cout << t;
-    debugout(args...);
-}
-
-
-// Rabin Miller seems the best solution
-// https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test
-// http://stackoverflow.com/questions/4424374/determining-if-a-number-is-prime
-
-long power(int a, int n, int mod)
-{
-    long power = a, result = 1;
-
-    while(n) {
-        if(n & 1)
-            result = (result * power) % mod;
-        power = (power * power) % mod;
-        n >>= 1;
-    }
-    return result;
-}
-
-bool witness(int a, int n)
-{
-    auto u = n / 2;
-    auto t = 1;
-    while(not (u & 1)) {
-        u  /= 2;
-        ++t;
-    }
-
-    long curr, prev = power(a, u, n);
-    for(auto i=1; i <= t; ++i, prev = curr) {
-        curr = (prev * prev) % n;
-        if((curr == 1) and (prev != 1) and (prev != n - 1))
-            return true;
-    }
-    return curr != 1;
-}
-
-inline
-bool isprime(int number)
-{
-    /*
-      WARNING: Algorithm deterministic only for numbers < 4,759,123,141
-      (unsigned int's max is 4294967296)
-
-      if n < 1,373,653, it is enough to test a = 2 and 3.
-      if n < 9,080,191, it is enough to test a = 31 and 73.
-      if n < 4,759,123,141, it is enough to test a = 2, 7, and 61.
-      if n < 2,152,302,898,747, it is enough to test a = 2, 3, 5, 7, and 11.
-      if n < 3,474,749,660,383, it is enough to test a = 2, 3, 5, 7, 11, and 13.
-      if n < 341,550,071,728,321, it is enough to test a = 2, 3, 5, 7, 11, 13,
-      and 17.
-    */
-#if 0
     if((not (number & 1)) and number != 2)
+        return false;
+    if(number % 3 == 0 and number != 3)
         return false;
     if(number < 2)
         return false;
-#endif
-    if(number % 3 == 0 and number != 3)
-        return false;
 
-    if(number < 1373653) {
-        for(auto k=1; 36 * k * k - 12 * k < number; ++k)
-            if ((number % (6 * k + 1) == 0) or (number % (6 * k - 1) == 0))
-                return false;
-
-        return true;
-    }
-
-    if(number < 9080191) {
-        if(witness(31, number))
+    // if(number < 1373653) {
+    for(T k=1; 36 * k * k - 12 * k < number; ++k)
+        if((number % (6 * k + 1) == 0) or (number % (6 * k - 1) == 0))
             return false;
-        if(witness(73, number))
-            return false;
-        return true;
-    }
-
-    if(witness(2, number))
-        return false;
-    if(witness(7, number))
-        return false;
-    if(witness(61, number))
-        return false;
 
     return true;
-}
-
-
-auto
-memprime(unsigned int number) -> bool
-{
-    // very basic memoization
-    static unsigned int maxsize = 64 * 4096;  // on a 64 bit machine ... 4k
-    static std::vector<bool> memo(maxsize);
-    static unsigned int lastseen = 0;  // avoid resizing (reallocation)
-
-    if(number >= maxsize)
-        return isprime(number);
-
-    if(number > lastseen) {
-        lastseen = number;
-        memo[number] = isprime(number);
-    }
-
-    return memo[number];
+    // }
 }
 
 
@@ -162,21 +53,31 @@ memprime(unsigned int number) -> bool
 int
 main(int argc, char *argv[])
 {
+    // memoize
+    unsigned short memo[1229];
+    memo[0] = 2;
+    for(unsigned short i=3, count=1; i < 10000; i += 2)
+        if(isprime(i))
+            memo[count++] = i;
+
     std::ifstream stream(argv[1]);
+
+    auto mbegin = std::begin(memo);
+    auto mend = std::end(memo);
+    auto m2nd = std::next(mbegin);
 
     unsigned int input;
     while(stream >> input) {
-        if(input < 2) {
+        auto lb = std::lower_bound(mbegin, mend, input);
+        // 0 index (2) is always there
+        if(lb == mend) {
             std::cout << std::endl;
             continue;
         }
 
-        std::cout << 2;
-        for(auto i=3U; i < input; i += 2) {
-            if(memprime(i)) {
-                std::cout << ',' << i;
-            }
-        }
+        std::cout << *mbegin;
+        for(auto i=m2nd; i < lb; i++)
+            std::cout << ',' << *i;
         std::cout << std::endl;
     }
     return 0;

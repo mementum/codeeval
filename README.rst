@@ -168,6 +168,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 58.525 | 1051 |  2166784 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0046 | Medium   | `Prime Numbers`_                  | C++      | 64.919 |   20 |     8760 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-01-10                | Python 2 | 55.918 |  287 |  5258477 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 54.503 |  487 |  5750411 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0073 | Medium   | `Decode Numbers`_                 | C++      | 64.975 |    3 |     8789 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2016-01-05                | Python 2 | 58.487 |  111 |  3968903 |
@@ -269,6 +275,7 @@ https://www.codeeval.com/ranking.
 .. _Trailing String: https://www.codeeval.com/public_sc/32/
 .. _Jolly Jumpers: https://www.codeeval.com/public_sc/43/
 .. _Reverse and Add: https://www.codeeval.com/public_sc/45/
+.. _Prime Numbers: https://www.codeeval.com/public_sc/46/
 .. _Decode Numbers: https://www.codeeval.com/public_sc/73/
 .. _Pass Triangle: https://www.codeeval.com/public_sc/89/
 .. _Interrupted Bubble Sort: https://www.codeeval.com/public_sc/158/
