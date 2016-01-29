@@ -14,9 +14,33 @@ Languages/Compilers
 
 The languages/compiler versions in use at CodeEval:
 
-  - C++: gcc 4.8.1
-  - Python 2: 2.7.3
-  - Python 3: 3.2.3
+  - C++: gcc 4.8.4 (from 2016-01-11) / gcc 4.8.1 (until 2016-01-10)
+  - Python 2: 2.7.6 (from 2016-01-11) / 2.7.3 (until 2016-01-10)
+  - Python 3: 3.4.3 (from 2016-01-11) / 3.2.3 (until 2016-01-10)
+
+  CodeEval issued a *sandbox* update on 2016-01-11, including updating some of
+  the above versions. Following issues have been (are still being) observed
+  over 2 weeks later:
+
+    - C++ Apparently random execution times / memory consumption
+
+      Nothing below 46 ms with memory consumption around 512 bytes **!!!**
+
+      New submissions on 2016-01-29 show:
+
+        - Execution times ok (even down to 1ms from previous 2ms)
+        - Memory consumption ok
+
+    - Python 2.7
+
+      Execution times around **14ms** and memory consumption **256** **BYTES**
+
+      *Why program in C++ anymore?*
+
+    - Python 3.4
+
+      Even if memory consumption seems a bit too high, the numbers are by no
+      means orders of magnitude away from expected results
 
 Notes
 -----
@@ -56,7 +80,7 @@ https://www.codeeval.com/ranking.
 +======+==========+===================================+==========+========+======+==========+
 | 0006 | Hard     | `Longest Common Subsequence`_     | C++      | 99.910 |    4 |    29173 |
 |      |          |                                   +----------+--------+------+----------+
-|      |          |  *Date*: 2016-01-09               | Python 2 | 92.918 |  570 |  1773568 |
+|      |          | *Date*: 2016-01-09                | Python 2 | 92.918 |  570 |  1773568 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 86.478 |  282 |  5078695 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
@@ -222,6 +246,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 58.041 | 1108 |  2166784 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0232 | Medium   | `Meet Comb Sort`_                 | C++      | 64.980 |    1 |    11105 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-01-29                | Python 2 | 64.957 |**13**|   **256**|
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 54.886 |   96 |  6324724 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0001 | Easy     | `Fizz Buzz`_                      | C++      | 34.985 |    4 |     8760 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2016-01-09                | Python 2 | 31.453 |  119 |  3999837 |
@@ -296,6 +326,7 @@ https://www.codeeval.com/ranking.
 .. _Sort Matrix Columns: https://www.codeeval.com/public_sc/200/
 .. _Alternative Reality: https://www.codeeval.com/public_sc/223/
 .. _To PI or not to PI: https://www.codeeval.com/public_sc/228/
+.. _Meet Comb Sort: https://www.codeeval.com/public_sc/232/
 
 .. easy
 .. _Fizz Buzz: https://www.codeeval.com/public_sc/1/
