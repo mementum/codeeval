@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2015 Daniel Rodriguez
+  Copyright (C) 2015, 2016 Daniel Rodriguez
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,13 +29,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Output debugging
 ///////////////////////////////////////////////////////////////////////////////
-template<typename T, typename... Args>
-void debugout(const T &t, Args... args) // recursive variadic function
-{
-    std::cout << t;
-    debugout(args...);
-}
-
 template<typename T>
 void debugout(const T &t)
 {
@@ -54,6 +47,13 @@ void debugout(const std::vector<T> &v)
         std::cout << *last;
     }
     std::cout << "}" << std::endl;
+}
+
+template<typename T, typename... Args>
+void debugout(const T &t, Args... args) // recursive variadic function
+{
+    std::cout << t;
+    debugout(args...);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
