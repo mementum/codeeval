@@ -294,6 +294,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 30.781 |  269 |  4490559 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0232 | Easy     | `Not So Clever`_                  | C++      | 34.987 |    3 |     8960 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-01-29                | Python 2 | 34.958 |**24**|   **256**|
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 29.524 |   95 |  6363653 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 
 .. hard
 .. _Longest Common Subsequence: https://www.codeeval.com/public_sc/6/
@@ -336,3 +342,4 @@ https://www.codeeval.com/ranking.
 .. _String Mask: https://www.codeeval.com/public_sc/199/
 .. _Find the Highest Score: https://www.codeeval.com/public_sc/208/
 .. _Trick or Treat: https://www.codeeval.com/public_sc/220/
+.. _Not So Clever: https://www.codeeval.com/public_sc/232/
