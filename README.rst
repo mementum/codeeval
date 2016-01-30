@@ -210,6 +210,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 57.180 |  268 |  3968903 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0084 | Medium   | `Balanced Smileys`_               | C++      | 64.983 |    1 |     9071 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-01-30                | Python 2 | 64.961 |**12**|   **256**|
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 54.904 |  103 |  6298562 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0089 | Medium   | `Pass Triangle`_                  | C++      | 64.944 |   11 |    12305 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2015-12-18                | Python 2 | 57.495 |  173 |  4479031 |
@@ -326,6 +332,7 @@ https://www.codeeval.com/ranking.
 .. _Reverse and Add: https://www.codeeval.com/public_sc/45/
 .. _Prime Numbers: https://www.codeeval.com/public_sc/46/
 .. _Decode Numbers: https://www.codeeval.com/public_sc/73/
+.. _Balanced Smileys: https://www.codeeval.com/public_sc/84/
 .. _Pass Triangle: https://www.codeeval.com/public_sc/89/
 .. _Interrupted Bubble Sort: https://www.codeeval.com/public_sc/158/
 .. _Column Names: https://www.codeeval.com/public_sc/197/
