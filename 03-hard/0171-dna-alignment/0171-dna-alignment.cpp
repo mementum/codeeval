@@ -19,12 +19,85 @@
 
 #include <iostream>
 #include <fstream>
-#include <sstream>
-#include <vector>
-#include <string>
-#include <limits>
-#include <climits>
+
 #include <algorithm>
+#include <iterator>
+#include <limits>
+#include <vector>
+
+#include <climits>
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Stream Imbuer for Parsing
+// http://stackoverflow.com/questions/1894886/parsing-a-comma-delimited-stdstring
+//    ss.imbue(std::locale(ss.getloc(), new SeparatorReader(" ,|")));
+///////////////////////////////////////////////////////////////////////////////
+
+struct SeparatorReader: std::ctype<char>
+{
+    template<typename T>
+    SeparatorReader(const T &seps): std::ctype<char>(get_table(seps), true) {}
+
+    template<typename T>
+    std::ctype_base::mask const *get_table(const T &seps) {
+        auto &&rc = new std::ctype_base::mask[std::ctype<char>::table_size]();
+        for(auto &&sep: seps)
+            rc[static_cast<unsigned char>(sep)] = std::ctype_base::space;
+        return &rc[0];
+    }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// Iterator which iterates a wrapped istream_iterator until a given character
+///////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+struct istream_iterator_until {
+    std::istream_iterator<T> iter;
+    std::istream_iterator<T> last;
+    T until;
+    bool at_end;
+
+    using value_type = T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = T *;
+    using reference = T &;
+    using iterator_category = std::output_iterator_tag;
+
+    istream_iterator_until() : at_end(true) {}
+
+    istream_iterator_until(std::istream &is, const T &until) :
+        iter(is), last(), until(until), at_end(not is or *iter == until) {}
+
+    T operator *() const { return *iter; }
+
+    istream_iterator_until& operator ++() {
+        ++iter;
+        at_end = iter == last or *iter == until;
+        return *this;
+    }
+
+    istream_iterator_until operator ++(int) {
+        istream_iterator_until tmp = *this;
+        ++(*this);
+        return tmp;
+    }
+
+    bool operator !=(const istream_iterator_until &other) const {
+        return not (*this == other);
+    }
+
+    bool operator ==(const istream_iterator_until &other) const {
+        if(at_end)
+            return other.at_end;
+
+        if(other.at_end)
+            return false;
+
+        return iter == other.iter;
+    }
+};
 
 
 // Defined so to avoid overflow if it were defined as INT_MIN
@@ -106,19 +179,22 @@ nw_align_affine_gap(iter a1, iter a2, iter b1, iter b2)
 int
 main(int argc, char *argv[]) {
     std::ifstream stream(argv[1]);
-    std::string line;
+    stream.imbue(std::locale(stream.getloc(), new SeparatorReader("")));
 
-    while (std::getline(stream, line)) {
-        // Do something with the line
-        auto seqa_end = line.find_first_of(" |");
-        auto seqb_start = line.find_first_not_of(" |", seqa_end);
+    std::vector<char> seqs(400);  // 400 is problem limit
+    auto first = seqs.begin();
 
-        auto lbegin = line.begin();
+    auto in2 = istream_iterator_until<char>();
+    while (stream) {
+        auto in1 = istream_iterator_until<char>(stream, '\n');
+        auto last = std::copy(in1, in2, first);
+        if(first == last)
+            break;  // nothing read
 
-        auto maxscore = nw_align_affine_gap(
-            lbegin, std::next(lbegin, seqa_end),          // Seqa
-            std::next(lbegin, seqb_start), line.end());   // Seqb
+        auto seqa_end = std::find(seqs.begin(), last, ' ');
+        auto seqb_start = ++std::find(std::next(seqa_end), last, ' ');
 
+        auto maxscore = nw_align_affine_gap(first, seqa_end, seqb_start, last);
         std::cout << maxscore << std::endl;
     }
     return 0;
