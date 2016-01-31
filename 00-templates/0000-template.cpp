@@ -26,6 +26,54 @@
 #include <vector>
 
 
+template <typename T>
+struct istream_iterator_until {
+    std::istream_iterator<T> iter;
+    std::istream_iterator<T> last;
+    T until;
+    bool at_end;
+
+    using value_type = T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = T *;
+    using reference = T &;
+    using iterator_category = std::output_iterator_tag;
+
+    istream_iterator_until() : at_end(true) {}
+
+    istream_iterator_until(std::istream &is, const T &until) :
+        iter(is), last(), until(until), at_end(not is or *iter == until) {}
+
+    T operator *() const { return *iter; }
+
+    istream_iterator_until& operator ++() {
+        ++iter;
+        at_end = iter == last or *iter == until;
+        return *this;
+    }
+
+    istream_iterator_until operator ++(int) {
+        istream_iterator_until tmp = *this;
+        ++(*this);
+        return tmp;
+    }
+
+    bool operator !=(const istream_iterator_until &other) const {
+        return not (*this == other);
+    }
+
+    bool operator ==(const istream_iterator_until &other) const {
+        if(at_end)
+            return other.at_end;
+
+        if(other.at_end)
+            return false;
+
+        return iter == other.iter;
+    }
+};
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // Output debugging
 ///////////////////////////////////////////////////////////////////////////////
