@@ -282,6 +282,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 30.805 |  266 |  4468506 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0156 | Easy     | `Roller Coaster`_                 | C++      | 34.990 |    1 |    10434 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-01-31                | Python 2 | 34.967 |**19**|   **256**|
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 29.567 |   99 |  6303641 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0199 | Easy     | `String Mask`_                    | C++      | 34.982 |    3 |    13846 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2015-12-22                | Python 2 | 31.485 |  111 |  3978136 |
@@ -346,6 +352,7 @@ https://www.codeeval.com/ranking.
 .. _Prime Palindrome: https://www.codeeval.com/public_sc/3/
 .. _Sum of Primes: https://www.codeeval.com/public_sc/4/
 .. _Sum of Integers from File: https://www.codeeval.com/public_sc/24/
+.. _Roller Coaster: https://www.codeeval.com/public_sc/156/
 .. _String Mask: https://www.codeeval.com/public_sc/199/
 .. _Find the Highest Score: https://www.codeeval.com/public_sc/208/
 .. _Trick or Treat: https://www.codeeval.com/public_sc/220/
