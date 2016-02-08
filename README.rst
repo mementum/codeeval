@@ -216,6 +216,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 54.503 |  487 |  5750411 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0071 | Medium   | `Reverse Groups`_                 | C++      |        |      |          |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-01-05                | Python 2 | 64.954 |**14**|   **256**|
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 54.965 |  101 |  6263671 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0073 | Medium   | `Decode Numbers`_                 | C++      | 64.975 |    3 |     8789 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2016-01-05                | Python 2 | 58.487 |  111 |  3968903 |
@@ -357,6 +363,7 @@ https://www.codeeval.com/ranking.
 .. _Jolly Jumpers: https://www.codeeval.com/public_sc/43/
 .. _Reverse and Add: https://www.codeeval.com/public_sc/45/
 .. _Prime Numbers: https://www.codeeval.com/public_sc/46/
+.. _Reverse Groups: https://www.codeeval.com/public_sc/71/
 .. _Decode Numbers: https://www.codeeval.com/public_sc/73/
 .. _Balanced Smileys: https://www.codeeval.com/public_sc/84/
 .. _Pass Triangle: https://www.codeeval.com/public_sc/89/
