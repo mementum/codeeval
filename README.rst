@@ -168,6 +168,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 87.713 |  275 |  4576480 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0234 | Hard     | `Code Like Huffman`_              | C++      |        |      |          |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-02-08                | Python 2 | 99.799 |**40**|   **256**|
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 73.089 |  127 | 11020975 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0002 | Medium   | `Longest Lines`_                  | C++      | 64.965 |    3 |    14809 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2015-12-29                | Python 2 | 58.547 |  108 |  3935245 |
@@ -341,6 +347,7 @@ https://www.codeeval.com/ranking.
 .. _Glue Shredded Pieces: https://www.codeeval.com/public_sc/185/
 .. _Brainf*ck: https://www.codeeval.com/public_sc/210/
 .. _Prisoner or Citizen: https://www.codeeval.com/public_sc/224/
+.. _Code Like Huffman: https://www.codeeval.com/public_sc/234/
 
 .. medium
 .. _Longest Lines: https://www.codeeval.com/public_sc/2/
