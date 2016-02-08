@@ -306,6 +306,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 30.781 |  269 |  4490559 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0222 | Easy     | `Black Card`_                     | C++      | 34.970 |    1 |    33786 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-02-05                | Python 2 | 34.949 |**29**|   **256**|
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 29.601 |   91 |  6278964 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0232 | Easy     | `Not So Clever`_                  | C++      | 34.987 |    3 |     8960 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2016-01-29                | Python 2 | 34.958 |**24**|   **256**|
@@ -356,4 +362,5 @@ https://www.codeeval.com/ranking.
 .. _String Mask: https://www.codeeval.com/public_sc/199/
 .. _Find the Highest Score: https://www.codeeval.com/public_sc/208/
 .. _Trick or Treat: https://www.codeeval.com/public_sc/220/
+.. _Black Card: https://www.codeeval.com/public_sc/222/
 .. _Not So Clever: https://www.codeeval.com/public_sc/232/
