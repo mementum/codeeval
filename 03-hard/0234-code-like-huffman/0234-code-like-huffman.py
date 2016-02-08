@@ -31,6 +31,13 @@ else:  # >= 3
     pass
 
 
+# This version uses the dual que algorithm to match the result. The public test
+# cases will be a pass with a single queue implementation but it will not
+# withstand the full (non-public) test case. The description in the challenge
+# makes sense when applying the priorities to "symbols" (queue 1) vs "nodes"
+# (queue 2) although the same can be applied to the single queue algorithm
+
+
 def huffman(node, result, code=''):
     # Descend the tree recursively creating the codes
     if len(node[1]) > 1:
