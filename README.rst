@@ -114,6 +114,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 87.507 |  292 |  4627414 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0048 | Hard     | `Discount Offers`_                | C++      |        |      |          |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-01-08                | Python 2 | 96.403 |   48 |  1407997 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 75.927 |  336 |  9392128 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0069 | Hard     | `Distinct Subsequences`_          | C++      | 99.959 |    3 |     9772 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2016-01-01                | Python 2 | 89.910 |  120 |  3979474 |
@@ -326,6 +332,7 @@ https://www.codeeval.com/ranking.
 .. _String Searching: https://www.codeeval.com/public_sc/28/
 .. _Following Integer: https://www.codeeval.com/public_sc/44/
 .. _Palindromic Ranges: https://www.codeeval.com/public_sc/47/
+.. _Discount Offers: https://www.codeeval.com/public_sc/48/
 .. _Distinct Subsequences: https://www.codeeval.com/public_sc/69/
 .. _Minimum Path Sum: https://www.codeeval.com/public_sc/72/
 .. _Find Min: https://www.codeeval.com/public_sc/85/
