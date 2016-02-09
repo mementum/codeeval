@@ -294,6 +294,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 30.335 |  535 |  4467173 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0008 | Easy     | `Reverse Words`_                  | C++      |        |      |          |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-02-09                | Python 2 | 34.937 |**36**|   **256**|
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 29.594 |   89 |  6291892 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0024 | Easy     | `Sum of Integers from File`_      | C++      | 34.987 |    3 |     8760 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2016-01-10                | Python 2 | 31.510 |  109 |  3952575 |
@@ -390,6 +396,7 @@ https://www.codeeval.com/ranking.
 .. _Fizz Buzz: https://www.codeeval.com/public_sc/1/
 .. _Prime Palindrome: https://www.codeeval.com/public_sc/3/
 .. _Sum of Primes: https://www.codeeval.com/public_sc/4/
+.. _Reverse Words: https://www.codeeval.com/public_sc/8/
 .. _Sum of Integers from File: https://www.codeeval.com/public_sc/24/
 .. _Query Board: https://www.codeeval.com/public_sc/87/
 .. _Roller Coaster: https://www.codeeval.com/public_sc/156/
