@@ -390,4 +390,5 @@ https://www.codeeval.com/ranking.
 .. _Find the Highest Score: https://www.codeeval.com/public_sc/208/
 .. _Trick or Treat: https://www.codeeval.com/public_sc/220/
 .. _Black Card: https://www.codeeval.com/public_sc/222/
+.. _Football: https://www.codeeval.com/public_sc/230/
 .. _Not So Clever: https://www.codeeval.com/public_sc/232/
