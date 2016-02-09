@@ -318,6 +318,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 29.616 |   97 |  6248251 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0021 | Easy     | `Sum of Digits`_                  | C++      |        |      |          |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-02-09                | Python 2 | 34.984 | **9**|   **256**|
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 29.622 |   94 |  6247394 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0024 | Easy     | `Sum of Integers from File`_      | C++      | 34.987 |    3 |     8760 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2016-01-10                | Python 2 | 31.510 |  109 |  3952575 |
@@ -418,6 +424,7 @@ https://www.codeeval.com/ranking.
 .. _Multiples of a Number: https://www.codeeval.com/public_sc/18/
 .. _Bit Positions: https://www.codeeval.com/public_sc/19/
 .. _Lowercase: https://www.codeeval.com/public_sc/20/
+.. _Sum of Digits: https://www.codeeval.com/public_sc/21/
 .. _Sum of Integers from File: https://www.codeeval.com/public_sc/24/
 .. _Query Board: https://www.codeeval.com/public_sc/87/
 .. _Roller Coaster: https://www.codeeval.com/public_sc/156/
