@@ -120,6 +120,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 75.927 |  336 |  9392128 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0053 | Hard     | `Repeated Substring`_             | C++      |        |      |          |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-02-09                | Python 2 | 99.844 |**31**|   **256**|
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 84.509 |  103 |  6281430 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0069 | Hard     | `Distinct Subsequences`_          | C++      | 99.959 |    3 |     9772 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2016-01-01                | Python 2 | 89.910 |  120 |  3979474 |
@@ -387,6 +393,7 @@ https://www.codeeval.com/ranking.
 .. _Following Integer: https://www.codeeval.com/public_sc/44/
 .. _Palindromic Ranges: https://www.codeeval.com/public_sc/47/
 .. _Discount Offers: https://www.codeeval.com/public_sc/48/
+.. _Repeated Substring: https://www.codeeval.com/public_sc/53/
 .. _Distinct Subsequences: https://www.codeeval.com/public_sc/69/
 .. _Minimum Path Sum: https://www.codeeval.com/public_sc/72/
 .. _Find Min: https://www.codeeval.com/public_sc/85/
