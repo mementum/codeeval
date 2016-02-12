@@ -22,39 +22,9 @@
 // Headers for the implementation
 #include <algorithm>
 #include <iterator>
-#include <map>
+#include <tuple>
 #include <vector>
 
-
-///////////////////////////////////////////////////////////////////////////////
-// Output debugging
-///////////////////////////////////////////////////////////////////////////////
-template<typename T>
-void debugout(const T &t)
-{
-    std::cout << t << std::endl;
-}
-
-template<typename T>
-void debugout(const std::vector<T> &v)
-{
-    std::cout << "{";
-    if(v.size()) {
-        auto last = std::prev(v.end(), 1);
-        for(auto &&p=v.begin(); p != last; p++)
-            std::cout << *p << ",";
-
-        std::cout << *last;
-    }
-    std::cout << "}" << std::endl;
-}
-
-template<typename T, typename... Args>
-void debugout(const T &t, Args... args) // recursive variadic function
-{
-    std::cout << t;
-    debugout(args...);
-}
 
 struct SeparatorReader: std::ctype<char>
 {
@@ -74,38 +44,48 @@ struct SeparatorReader: std::ctype<char>
 ///////////////////////////////////////////////////////////////////////////////
 // Main
 ///////////////////////////////////////////////////////////////////////////////
+// Use a vector of tuples approach to avoid having a map<int, vector> which is
+// a lot more expensive, given prealloc is not possible, whereas a single
+// vector of tuples can be preallocated and reused by copying/transforming each
+// time from the beginning (since we get the last item as result)
+
 int
 main(int argc, char *argv[]) {
     std::ifstream stream(argv[1]);
-    // Ensure '\n' is not ws and breaks reading ints
+    // Ensure '\n' is not ws and breaks reading ints as '|' does
     stream.imbue(std::locale(stream.getloc(), new SeparatorReader(" ")));
-
     auto in2 = std::istream_iterator<int>{};
 
+    auto teamfans = std::vector<std::tuple<int, int>>(100);
+    auto tffirst = teamfans.begin();
+
     while(stream) {
-        auto teamfans = std::map<int, std::vector<int>>{};
-
-        char sep = '\0';
-        for(auto i = 1; stream and sep != '\n'; i++) {
+        // run over the "fans" and keep a (team, fan) reference
+        // transform instead of copy to create the pair
+        // fans are 1 based
+        auto tflast = tffirst;  // make sure we copy at the beginning
+        auto sep = '\0';
+        for(auto f=1; stream and sep != '\n'; f++, stream.clear(), stream >> sep) {
             auto in1 = std::istream_iterator<int>{stream};
-            for(auto in=in1; in != in2; in++)
-                teamfans[*in].push_back(i);
-
-            stream.clear(); stream >> sep;
+            tflast = std::transform(
+                in1, in2, tflast,
+                [f](const int t) { return std::make_tuple(t, f); });
         }
+        // now tflast points to the last element added to the vector
 
-        auto i = 0;
-        for(auto tf=teamfans.begin(); tf != teamfans.end(); tf++, i++) {
-            std::cout <<(i ? " " : "") << tf->first << ':';
+        std::sort(tffirst, tflast);  // the output is sorted team/fan
 
-            std::sort(tf->second.begin(), tf->second.end());
-            auto j = 0;
-            for(auto f=tf->second.begin(); f != tf->second.end(); f++, j++)
-                std::cout << (j ? "," : "") << *f;
+        auto lastteam = -1, iteam = 0, ifan = 0;
+        for(auto tf=tffirst; tf != tflast; tf++) {
+            std::tie(iteam, ifan) = *tf;  // unpack the tuple
 
-            std::cout << ';';
+            if(iteam != lastteam) {
+                lastteam = iteam;
+                std::cout << (tf != tffirst ? "; " : "") << iteam << ':' << ifan;
+            } else
+                std::cout << ',' << ifan;
         }
-        std::cout << std::endl;
+        std::cout << ';' << std::endl;  // complete the output
     }
     return 0;
 }
