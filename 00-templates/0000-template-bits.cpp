@@ -41,7 +41,141 @@
 #include <cstdint>
 
 
-///////////////////////////////////////////////////////////////////////////////
+// Reads until a "token" of the same typename T is read is meat
+// a b c | d e f -> istream_iterator_until<string> returns
+// 3 strings first -> a, b, c and stops upon seeing |
+
+template <typename T>
+struct istream_iterator_until {
+    std::istream_iterator<T> iter;
+    std::istream_iterator<T> last;
+    T until;
+    bool at_end;
+
+    using value_type = T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = T *;
+    using reference = T &;
+    using iterator_category = std::output_iterator_tag;
+
+    istream_iterator_until() : at_end(true) {}
+
+    istream_iterator_until(std::istream &is, const T &until) :
+        iter(is), last(), until(until), at_end(not is or *iter == until) {}
+
+    T operator *() const { return *iter; }
+
+    istream_iterator_until& operator ++() {
+        ++iter;
+        at_end = iter == last or *iter == until;
+        return *this;
+    }
+
+    istream_iterator_until operator ++(int) {
+        istream_iterator_until tmp = *this;
+        ++(*this);
+        return tmp;
+    }
+
+    bool operator !=(const istream_iterator_until &other) const {
+        return not (*this == other);
+    }
+
+    bool operator ==(const istream_iterator_until &other) const {
+        if(at_end)
+            return other.at_end;
+
+        if(other.at_end)
+            return false;
+
+        return iter == other.iter;
+    }
+};
+
+
+// This second version stops by making a peek at the upcoming next underlying
+// type and stopping. Example:
+// istream_iterator_until<string>(stream, ';')
+// reads into a string stopping when the next char is ;
+// ; has ideally been made a ws separator with SeparatorReader
+
+template <typename T>
+struct istream_iterator_until {
+    std::istream *is;
+    using TIter = std::istream_iterator<T>;
+    std::istream_iterator<T> iter;
+    std::istream_iterator<T> last;
+
+    typename T::value_type until;
+
+    bool at_end = false;
+    bool pre_end = false;
+
+    using value_type = T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = T *;
+    using reference = T &;
+    using iterator_category = std::output_iterator_tag;
+
+    istream_iterator_until() : at_end(true) {}
+
+    istream_iterator_until(std::istream &is, const typename T::value_type &until) :
+        is(&is), iter(is), last(), until(until) { check_end(); }
+
+    auto operator *() const { return *iter; }
+
+    auto check_end() {
+        if(not at_end) {
+            if(iter == last)
+                at_end = true;
+            else {
+                auto t = is->peek();
+                if(t == TIter::traits_type::eof() or t == until)
+                    pre_end = true;
+            }
+        }
+    }
+
+    auto &operator ++() {
+        if(pre_end)
+            at_end = true;
+
+        if(not at_end)
+            ++iter;
+
+        check_end();
+        return *this;
+    }
+
+    auto operator ++(int) {
+        istream_iterator_until tmp = *this;
+        if(pre_end)
+            at_end = true;
+
+        if(not at_end)
+            ++(*this);
+
+        check_end();
+        return tmp;
+    }
+
+    auto operator !=(const istream_iterator_until &other) const {
+        return not (*this == other);
+    }
+
+    auto operator ==(const istream_iterator_until &other) const {
+        if(at_end)
+            return other.at_end;
+
+        if(other.at_end)
+            return false;
+
+        return iter == other.iter;
+    }
+};
+
+
+//////////////////////////////////////////////////////////////////////
 // Typename Printer (GCC and CLang)
 #include <string>
 #include <cstdlib>
