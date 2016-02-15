@@ -26,15 +26,17 @@ from __future__ import (absolute_import, division, print_function,)
 # http://web.mit.edu/dimitrib/www/Auction_Encycl.pdf
 # http://www.mit.edu/~dimitrib/Auction_Survey.pdf
 
-import copy
 import fractions
 import string
 import sys
 
 # Small Py2/3 compatibility layer
 if sys.version_info.major == 2:
+    import itertools
+
     PY2 = True
     range = xrange
+    zip = itertools.izip
 else:  # >= 3
     PY2 = False
 
@@ -66,17 +68,16 @@ def suit_score(pname, cname):
     return int(sscore * 100.0)
 
 
-def auction_round(assigned, notassigned, prods, vals, epsilon):
+def auction_round(assigned, notassigned, values, epsilon):
     # Get only one unassigned -> there must be at least one or else no call
     # This is the Gauss-Seidl method theoretically best suited for serial
     # environments and we are actually executing in one
     unassigned = notassigned.pop()  # get the last one
-    vua = vals[unassigned]  # get the value per produce (s_score)
+    vua = values[unassigned]  # get the value per produce (s_score)
 
     # Find the best product
     bestval = max(vua)
     bestidx = vua.index(bestval)
-    bestprod = prods[bestidx]
 
     # Get the 2nd best product ... or self if no product with less value
     bestval2 = max([x for x in vua if x != bestval] or [bestval])
@@ -87,65 +88,45 @@ def auction_round(assigned, notassigned, prods, vals, epsilon):
     # But we have a copy of the aijs (values) and instead of increasing the
     # price we can directly decrease the value. For all occurences of object
     # (once per customer)
-    for c in vals:
-        vals[c][bestidx] -= bidincrement
+    for v in values:
+        v[bestidx] -= bidincrement
 
     # unassign previous customer
-    deassigned = assigned.pop(bestprod, None)
-    if deassigned is not None:
-        notassigned.append(deassigned)
+    if bestidx in assigned:
+        notassigned.append(assigned[bestidx])
 
     # assign current customer
-    assigned[bestprod] = unassigned
+    assigned[bestidx] = unassigned
 
 
-def auction_repetition(custs, prods, vals, epsilon=None, epdec=0.25):
-    # Applying the algorithm with changes in Epsilon makes the algorithm
-    # polynomial and "ensures" approaching/reaching the optimal solution. But
-    # it is not needed in our case
-    # papers, but it is not needed for the solution
-    if epsilon is None:
-        epsilon = 100.0  # Default start value
-
-    while epsilon > 1 / len(custs):
-        assigned = {}
-        notassigned = list(custs)
-
-        while notassigned:
-            auction_round(assigned, notassigned, prods, vals, epsilon)
-
-        epsilon *= epdec  # recommended scaling
-
-    return assigned
-
-
-def auction(custs, prods, vals, epsilon=None, epdec=0.5):
+def auction(values, epsilon=None):
     # This is a single Epsilon pass which is the main algorithm in Ber papers
     assigned = {}
-    notassigned = list(custs)
+    notassigned = list(range(len(values)))
 
-    if epsilon is None:
-        epsilon = 25.0  # we have "int'ed" the values by 100
+    if False and epsilon is None:
+        epsilon = 25  # we have "int'ed" the values by 100
+    else:  # auto epsilon generation
+        diffs = [[abs(i - j) for i, j in zip(v[:-1], v[1:]) if i != j]
+                 for v in values]
+        mininums = [min(x) for x in diffs]
+        epsilon = min(mininums) // 2 + 1
 
     while notassigned:
-        auction_round(assigned, notassigned, prods, vals, epsilon)
+        auction_round(assigned, notassigned, values, epsilon)
 
     return assigned
 
 
-def max_score(assigned, products, values):
+def max_score(assigned, values):
     # given an auction assignment returns the total value
-    maxscore = 0
-    for p in assigned:
-        pidx = products.index(p)
-        maxscore += values[assigned[p]][pidx]
-
-    return maxscore / 100.0
+    return sum(values[assigned[p]][p] for p in assigned) / 100.0
 
 
 if __name__ == '__main__':
     test_cases = open(sys.argv[1], 'r')
     count = 0
+    linput = []
     for line in test_cases:
         ls = line.rstrip('\n')
 
@@ -154,23 +135,28 @@ if __name__ == '__main__':
         customers = cstr.split(',') if cstr else []
         products = pstr.split(',') if pstr else []
 
+        linput.append((len(customers), len(products), line))
+
         # Early break
         if not customers or not products:
             print('%.2f' % 0.0)  # print a null score
             continue
 
-        values = {c: [suit_score(p, c) for p in products] for c in customers}
+        # generate the values
+        values = [[suit_score(p, c) for p in products] for c in customers]
 
         # if not enough products --> fill up with phantom entries
-        for i in range(len(customers) - len(products)):
-            products.append('ghost{}'.format(i))
-            for c in values:
-                values[c].append(0.0)  # ghost product with no value
+        extracols = len(customers) - len(products)
+        if extracols:
+            for v in values:
+                v.extend([0] * extracols)
 
-        # Do the thing
-        assignment = auction(customers, products, copy.deepcopy(values))
+        # Do the thing - send a copy because values will be modified
+        assignment = auction([v[:] for v in values])
 
         # And print the result
-        print('%.2f' % max_score(assignment, products, values))
+        print('%.2f' % max_score(assignment, values))
 
     test_cases.close()
+    for lc, lp, l in linput:
+        print('%d / %d /' % (lc, lp), l, end='')
