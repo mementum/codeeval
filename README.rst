@@ -384,7 +384,7 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 29.524 |   95 |  6363653 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
-| 0235 | Easy     | `Simple of Trump`_                | C++      | 34.990 |    1 |     9392 |
+| 0235 | Easy     | `Simple or Trump`_                | C++      | 34.990 |    1 |     9392 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2016-02-15                | Python 2 | 34.958 |**31**|   **256**|
 |      |          |                                   +----------+--------+------+----------+
@@ -447,4 +447,4 @@ https://www.codeeval.com/ranking.
 .. _Black Card: https://www.codeeval.com/public_sc/222/
 .. _Football: https://www.codeeval.com/public_sc/230/
 .. _Not So Clever: https://www.codeeval.com/public_sc/232/
-.. _Simple of Trump..: https://www.codeeval.com/public_sc/2352/
+.. _Simple or Trump: https://www.codeeval.com/public_sc/2352/
