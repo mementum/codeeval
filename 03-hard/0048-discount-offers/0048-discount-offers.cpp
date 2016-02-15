@@ -21,54 +21,38 @@
 
 // Headers for the implementation
 #include <algorithm>
+#include <iomanip>
 #include <iterator>
+#include <map>
 #include <string>
 #include <vector>
 
 #include <cctype>
 
 
-///////////////////////////////////////////////////////////////////////////////
-// Output debugging
-///////////////////////////////////////////////////////////////////////////////
-template<typename T>
-void debugout(const T &t)
-{
-    std::cout << t << std::endl;
-}
+// This iterator wrapper is thought for an istream_iterator overload of
+// std::string (and potentially something else) for non-ws is good.
+// If ",;" are the only characters defined as ws and ';' is the terminator but
+// ',' is the token separator) the wrapper will peek the next incoming char when
+// incrementing ++ to see if the upcoming ws is the "terminator" and set itself
+// to "at_end". Else it must be the other ws, which is the token separator and
+// parsing can continue
 
-template<typename T>
-void debugout(const std::vector<T> &v)
-{
-    std::cout << "{";
-    if(v.size()) {
-        auto last = std::prev(v.end(), 1);
-        for(auto &&p=v.begin(); p != last; p++)
-            std::cout << *p << ",";
-
-        std::cout << *last;
-    }
-    std::cout << "}" << std::endl;
-}
-
-template<typename T, typename... Args>
-void debugout(const T &t, Args... args) // recursive variadic function
-{
-    std::cout << t;
-    debugout(args...);
-}
-
+// During init, the incoming char has to be checked to avoid initialization of
+// "iter" with the stream which will automatically engage into parsing and a
+// token may me unwillfully skipped.
 
 template <typename T>
 struct istream_iterator_until {
     std::istream *is;
+    bool at_end = false;
+
     using TIter = std::istream_iterator<T>;
     std::istream_iterator<T> iter;
     std::istream_iterator<T> last;
 
     typename T::value_type until;
 
-    bool at_end = false;
     bool pre_end = false;
 
     using value_type = T;
@@ -80,9 +64,17 @@ struct istream_iterator_until {
     istream_iterator_until() : at_end(true) {}
 
     istream_iterator_until(std::istream &is, const typename T::value_type &until) :
-        is(&is), iter(is), last(), until(until) { check_end(); }
+        is(&is), at_end((not is) or is.peek() == until), iter(), last(), until(until) {
 
-    auto operator *() const { return *iter; }
+        // avoid init with stream if at_end else the next token will be
+        // automaticall consumed (and therfore will be skipped by the logic)
+        if(not at_end)
+            iter = TIter(is);
+
+        check_end();
+    }
+
+    const T &operator *() const { return *iter; }
 
     auto check_end() {
         if(not at_end) {
@@ -96,34 +88,38 @@ struct istream_iterator_until {
         }
     }
 
-    auto &operator ++() {
+    istream_iterator_until &operator ++() {
         if(pre_end)
             at_end = true;
 
         if(not at_end)
             ++iter;
-
+        else if(*is)  // at_end and stream is still good skip terminator
+            is->get();
         check_end();
+
         return *this;
     }
 
-    auto operator ++(int) {
+    istream_iterator_until operator ++(int) {
         istream_iterator_until tmp = *this;
         if(pre_end)
             at_end = true;
 
         if(not at_end)
             ++(*this);
-
+        else if(*is)  // at_end and stream is still good skip terminator
+            is->get();
         check_end();
+
         return tmp;
     }
 
-    auto operator !=(const istream_iterator_until &other) const {
+    bool operator !=(const istream_iterator_until &other) const {
         return not (*this == other);
     }
 
-    auto operator ==(const istream_iterator_until &other) const {
+    bool operator ==(const istream_iterator_until &other) const {
         if(at_end)
             return other.at_end;
 
@@ -157,7 +153,8 @@ struct SeparatorReader: std::ctype<char>
 
 
 template <typename T>
-gcd(T a, T b)
+auto
+gcd(T a, T b) -> T
 {
   T c;
   while (a != 0) {
@@ -172,6 +169,7 @@ gcd(T a, T b)
 template<typename iter1, typename iter2>
 auto
 suit_score(iter1 first1, iter1 last1, iter2 first2, iter2 last2)
+    -> ssize_t
 {
     // first1, last1 -> product name characters
     // first2, last2 -> customer name characters
@@ -179,7 +177,7 @@ suit_score(iter1 first1, iter1 last1, iter2 first2, iter2 last2)
     auto VBEGIN = std::begin(VOWELS);
     auto VEND = std::end(VOWELS);
 
-    auto isletter = [](const auto &c) -> bool { return std::isalpha(c); };
+    auto isletter = [](const char &c) -> bool { return std::isalpha(c); };
     auto pletters = std::count_if(first1, last1, isletter);
     auto cletters = std::count_if(first2, last2, isletter);
     auto sscore = 0.0;
@@ -187,12 +185,12 @@ suit_score(iter1 first1, iter1 last1, iter2 first2, iter2 last2)
     if (not (pletters % 2)) {
         sscore = 1.5 * std::count_if(
             first2, last2,
-            [VBEGIN, VEND](const auto &c)
+            [VBEGIN, VEND](const char &c)
             { return std::find(VBEGIN, VEND, c) != VEND; });
     } else {
         sscore = std::count_if(
             first2, last2,
-            [VBEGIN, VEND](const auto &c)
+            [VBEGIN, VEND](const char &c)
             { return std::isalpha(c) and std::find(VBEGIN, VEND, c) == VEND; });
     }
 
@@ -202,62 +200,82 @@ suit_score(iter1 first1, iter1 last1, iter2 first2, iter2 last2)
     return static_cast<ssize_t>(100.0 * sscore);
 }
 
-#if 0
-template <typename It>
+
 auto
-auction(It first, It last, const typename It::value_type &epsilon) {
-    using ItType = typename std::iterator_traits<It>::value_type;
+auction_round(std::map<int, int> &assigned,
+              std::vector<int> &notassigned,
+              std::vector<std::vector<int>> &values,
+              int epsilon) -> void {
 
-    auto msize = static_cast<size_t>(std::sqrt(std::distance(first, last)));
+    auto unassigned = notassigned.back();  // get one unassigned
+    notassigned.pop_back();
 
-    auto a = std::map<It, It>{};  // assigned
-    auto na = std::vector<It>(msize);  // not assigned
-    for(auto i = 0; i < msize; i++)
-        na[i] = std::next(first, i * msize);
+    auto &vecua = values[unassigned];  // products for unassigned
 
-    while (not na.empty()) {
-        auto nabegin = na.pop_back();
-        auto naend = std::next(nabegin, msize);
-        auto bestp = std::max_element(nabegin, naend);
+    // Find the best product for this unassigned
+    auto bestvalit = std::max_element(vecua.begin(), vecua.end());
+    auto bestval = *bestvalit;
+    auto bestvalidx = std::distance(vecua.begin(), bestvalit);
 
-        // finding the 2nd ... especially if there is only 1 element requires
-        auto pb1 = std::max_element(nabegin, bestp);
-        auto pb2 = std::max_element(std::next(bestp), naend);
-        auto bestp2 = *bestp;
-        if(pb1 != bestp and pb2 != naend) // 2 findings
-            bestp2 = std::max(*pb1, *pb2);
-        else
-            bestp2 = pb1 != bestp ? *pb1 : *pb2
+    // Find the 2nd best product for the unassigend
+    // set bestval to min, find next max and restore value
+    auto bestval2 = std::numeric_limits<int>::min();
+    for_each(vecua.begin(), vecua.end(),
+        [&bestval2, &bestval] (const int &v)
+        { if(v < bestval and v > bestval2) bestval2 = v; });
+
+    if(bestval2 == std::numeric_limits<int>::min())
+        bestval2 = bestval;
+
+    auto bindincrement = bestval - bestval2 + epsilon;  // price increase
+
+    // Decrease profit (equivalent to price increase but here we can modify values)
+    for(auto &&v: values)
+        v[bestvalidx] -= bindincrement;
+
+    // if the product was assigned, deassign
+    if(assigned.find(bestvalidx) != assigned.end())
+        notassigned.push_back(assigned[bestvalidx]);
+
+    // assignenment contains: first -> product index / second -> customer index
+    assigned[bestvalidx] = unassigned;  // assign to the explored not assigned
+}
 
 
+// Force passing copy of values -> values will be modified
+auto
+auction(std::vector<std::vector<int>> values, int epsilon=0)
+    -> std::map<int, int>
+{
+    // assignenment contains: first -> product index / second -> customer index
+    auto assigned = std::map<int, int>{};
+    auto notassigned = std::vector<int>(values.size());
+    std::iota(notassigned.begin(), notassigned.end(), 0);
 
+    if(not epsilon)
+        epsilon = 25;
 
-
-
-        auction_round(assigned, notassigned, prods, vals, epsilon);
+    while(notassigned.size())
+        auction_round(assigned, notassigned, values, epsilon);
 
     return assigned;
 }
-#endif
 
-template <typename It1, typename It2>
+
 auto
-do_auction(It1 first1, It2 last1, It2 first2, It2 last2)
+max_score(std::map<int, int> assigned, std::vector<std::vector<int>> &values)
+    -> float
 {
-    auto rows = std::distance(first1, last1);
-    auto cols = std::distance(first2, last2);
+    // given an auction assignment returns the total value
+    auto maxscore = 0;
+    // assignenment contains: first -> product index / second -> customer index
+    // values -> 1st index is customer (assignment second)
+    // values -> 2nd index is product (assignment first)
+    for(auto &&a: assigned)
+        maxscore += values[a.second][a.first];
 
-    auto msize = n;
-    if(rows > cols)
-        msize = rows;
-
-    auto values = std::vector<ssize_t>(msize * msize);
-    for(auto c=first1; c != last1; c++) {
-        for(auto p=first2; p != last2; p++) {
-    }
-
+    return static_cast<float>(maxscore) / 100.0;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // Main
@@ -273,33 +291,47 @@ main(int argc, char *argv[]) {
     while (stream) {
         auto customers = std::vector<std::string>{};
         std::copy(isit_until(stream, ';'), slast, std::back_inserter(customers));
-        // debugout("Customers: ", customers);
 
         auto products = std::vector<std::string>{};
         std::copy(isit_until(stream, '\n'), slast, std::back_inserter(products));
-        // debugout("Products: ", products);
 
         auto pbegin = products.begin();
         auto pend = products.end();
         auto cbegin = customers.begin();
         auto cend = customers.end();
 
-        auto rows = std::distance(cbegin, cend);
-        auto cols = std::distance(pbegin, pend);
+        auto ncusts = std::distance(cbegin, cend);  // rows (customers) size
+        auto nprods = std::distance(pbegin, pend);  // cols (products) size
 
-        auto erows = rows;
-        if(cols < rows):
-
-        auto values = std::vector<ssize_t>(std::max(customers.size(), products.size(), 0));
-        for (auto i = cbegin; c != cend; c++) {
-            auto ridx = std::distance(cbegin, c);
-            for (auto p = pbegin; p != pend; p++) {
-                auto cidx =
-                auto sscore = suit_score(p->begin(), p->end(), c->begin(), c->end());
-                values[std::distance(cbegin, c) * x + std::distance(pbegin, p)] = sscore;
-            }
-            values.push_back(pv);
+        if(not ncusts or not nprods) {
+            std::cout << std::fixed << std::setprecision(2) << 0.0 << std::endl;
+            continue;
         }
+
+        // customer (rows) products (cols) values
+        auto values = std::vector<std::vector<int>>(ncusts);
+
+        // products are columns, but if custs > prods, we need extra null entries
+        auto ncols = std::max(ncusts, nprods);
+
+        auto vit = values.begin();
+        for (auto c=cbegin; c != cend; c++, vit++) {
+            auto &v = *vit;
+            v.resize(ncols);
+
+            // fill customer array wit products values
+            auto j = 0;
+            for (auto p=pbegin; p != pend; p++, j++)
+                v[j] = suit_score(p->begin(), p->end(), c->begin(), c->end());
+
+            // fill customer array phantom products with minimum initial value
+            for(auto j2=nprods; j2 < ncusts; j2++)
+                v[j] = 0;
+        }
+
+        auto assigned = auction(values);
+        auto maxscore = max_score(assigned, values);
+        std::cout << std::fixed << std::setprecision(2) << maxscore << std::endl;
     }
     return 0;
 }
