@@ -168,6 +168,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 83.599 | 1045 |  4686966 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0213 | Hard     | `Lakes Not Cakes`_                | C++      | 99.827 |    2 |    68314 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-02-16                | Python 2 | 85.319 |**45**|   **256**|
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 83.599 |  138 |  6922478 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0224 | Hard     | `Prisoner Or Citizen`_            | C++      | 99.942 |    3 |    16034 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2015-12-15                | Python 2 | 88.605 |  121 |  4523975 |
@@ -419,6 +425,7 @@ https://www.codeeval.com/ranking.
 .. _DNA Alignment: https://www.codeeval.com/public_sc/171/
 .. _Glue Shredded Pieces: https://www.codeeval.com/public_sc/185/
 .. _Brainf*ck: https://www.codeeval.com/public_sc/210/
+.. _Lakes Not Cakes: https://www.codeeval.com/public_sc/213/
 .. _Prisoner or Citizen: https://www.codeeval.com/public_sc/224/
 .. _Code Like Huffman: https://www.codeeval.com/public_sc/234/
 
