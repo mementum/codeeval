@@ -198,6 +198,12 @@ https://www.codeeval.com/ranking.
 |      |          |                                   +----------+--------+------+----------+
 |      |          |                                   | Python 3 | 56.908 |  269 |  4656369 |
 +------+----------+-----------------------------------+----------+--------+------+----------+
+| 0010 | Medium   | `Mth Element`_                    | C++      | 64.980 |    1 |    11065 |
+|      |          |                                   +----------+--------+------+----------+
+|      |          | *Date*: 2016-01-10                | Python 2 | 64.918 |**25**|   **256**|
+|      |          |                                   +----------+--------+------+----------+
+|      |          |                                   | Python 3 | 54.947 |  113 |  6250161 |
++------+----------+-----------------------------------+----------+--------+------+----------+
 | 0013 | Medium   | `Remove Characters`_              | C++      | 64.970 |    3 |    11866 |
 |      |          |                                   +----------+--------+------+----------+
 |      |          | *Date*: 2015-12-15                | Python 2 | 58.528 |  109 |  3946200 |
@@ -432,6 +438,7 @@ https://www.codeeval.com/ranking.
 .. medium
 .. _Longest Lines: https://www.codeeval.com/public_sc/2/
 .. _Stack Implementation: https://www.codeeval.com/public_sc/9/
+.. _Mth Element: https://www.codeeval.com/public_sc/10/
 .. _Remove Characters: https://www.codeeval.com/public_sc/13/
 .. _Endianness: https://www.codeeval.com/public_sc/15/
 .. _Trailing String: https://www.codeeval.com/public_sc/32/
